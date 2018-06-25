@@ -69,7 +69,7 @@ manager.updateEfficiency(
 You can only generate the entry necessary to update the identity and submit it manually (using factom.js library).
 
 ```javascript
-const manager = new FactomIdentityManager();
+const { generateCoinbaseAddressUpdateEntry, generateEfficiencyUpdateEntry } = require('factom-identity');
 
 const entry = generateCoinbaseAddressUpdateEntry(
     '888888b2e7c7c63655fa85e0b0c43b4b036a6bede51d38964426f122f61c5584',
