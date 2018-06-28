@@ -1,6 +1,6 @@
 {
     "name": "factom-identity-lib",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Library to read and update Factom identities",
     "main": "src/factom-identity.js",
     "scripts": {
@@ -23,6 +23,6 @@
     "dependencies": {
         "base-58": "0.0.1",
         "elliptic": "^6.4.0",
-        "factom": "^0.2.2"
+        "factom": "^0.2.3"
     }
 }

@@ -86,7 +86,7 @@ async function update(cli, rootChainId, fctAddress, sk1, ecPrivateAddress) {
         throw new Error(`The SK1 key cannot sign in the Identity Root Chain ${rootChainId}`);
     }
 
-    const entry = getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1);
+    const entry = Entry.builder(getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1)).build();
     return await cli.addEntry(entry, ecPrivateAddress);
 }
 
@@ -114,16 +114,11 @@ function getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1) {
     const dataToSign = Buffer.concat([version, marker, chainId, factoidAddress, timestamp]);
     const { identityKeyPreImage, signature } = sign(extractSecretFromIdentityKey(sk1), dataToSign);
 
-    return Entry.builder()
-        .chainId(chainId)
-        .extId(version)
-        .extId(marker)
-        .extId(chainId)
-        .extId(factoidAddress)
-        .extId(timestamp)
-        .extId(identityKeyPreImage)
-        .extId(signature)
-        .build();
+    return {
+        chainId: chainId,
+        extIds: [version, marker, chainId, factoidAddress, timestamp, identityKeyPreImage, signature],
+        content: Buffer.from('')
+    };
 }
 
 module.exports = {

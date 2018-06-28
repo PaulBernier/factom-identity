@@ -1,4 +1,4 @@
-const { Entry, isValidEcPrivateAddress, } = require('factom');
+const { Entry, isValidEcPrivateAddress } = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
 const { isValidSk1, isValidIdentityChainId } = require('./validation');
 const { getNowTimestamp8BytesBuffer } = require('./util');
@@ -79,8 +79,7 @@ async function update(cli, rootChainId, efficiency, sk1, ecPrivateAddress) {
         throw new Error(`The SK1 cannot sign in the Identity Root Chain ${rootChainId}`);
     }
 
-    const entry = getEfficiencyUpdateEntry(rootChainId, rootChain.serverManagementSubchainId, efficiency, sk1);
-
+    const entry = Entry.builder(getEfficiencyUpdateEntry(rootChainId, rootChain.serverManagementSubchainId, efficiency, sk1)).build();
     return await cli.addEntry(entry, ecPrivateAddress);
 }
 
@@ -114,16 +113,11 @@ function getEfficiencyUpdateEntry(rootChainId, serverManagementSubchainId, eff, 
     const dataToSign = Buffer.concat([version, marker, chainId, efficiency, timestamp]);
     const { identityKeyPreImage, signature } = sign(extractSecretFromIdentityKey(sk1), dataToSign);
 
-    return Entry.builder()
-        .chainId(serverManagementSubchainId)
-        .extId(version)
-        .extId(marker)
-        .extId(chainId)
-        .extId(efficiency)
-        .extId(timestamp)
-        .extId(identityKeyPreImage)
-        .extId(signature)
-        .build();
+    return {
+        chainId: serverManagementSubchainId,
+        extIds: [version, marker, chainId, efficiency, timestamp, identityKeyPreImage, signature],
+        content: Buffer.from('')
+    };
 }
 
 module.exports = {
