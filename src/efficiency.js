@@ -114,7 +114,7 @@ function getEfficiencyUpdateEntry(rootChainId, serverManagementSubchainId, eff, 
     const { identityKeyPreImage, signature } = sign(extractSecretFromIdentityKey(sk1), dataToSign);
 
     return {
-        chainId: serverManagementSubchainId,
+        chainId: Buffer.from(serverManagementSubchainId, 'hex'),
         extIds: [version, marker, chainId, efficiency, timestamp, identityKeyPreImage, signature],
         content: Buffer.from('')
     };
