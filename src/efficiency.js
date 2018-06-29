@@ -105,7 +105,7 @@ function getEfficiencyUpdateEntry(rootChainId, serverManagementSubchainId, eff, 
     const marker = Buffer.from('Server Efficiency', 'utf8');
     const chainId = Buffer.from(rootChainId, 'hex');
 
-    let effHex = parseInt(eff * 100).toString('16');
+    let effHex = Math.round(eff * 100).toString('16');
     effHex = effHex.padStart(4, '0');
     const efficiency = Buffer.from(effHex, 'hex');
     const timestamp = getNowTimestamp8BytesBuffer();
