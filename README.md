@@ -1,11 +1,11 @@
-# factom-identity.js
+# factom-identity-lib.js
 
 Library to read and update Factom identities. (underlying library of factom-identity-cli)
 
 ## Installation
 
 ```bash
-$ npm install --save factom-identity
+$ npm install --save factom-identity-lib
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ $ npm install --save factom-identity
 ### Instantiate FactomIdentityManager
 
 ```javascript
-const { FactomIdentityManager } = require('factom-identity');
+const { FactomIdentityManager } = require('factom-identity-lib');
 
 // Default factomd connection to localhost:8088
 const manager = new FactomIdentityManager();
