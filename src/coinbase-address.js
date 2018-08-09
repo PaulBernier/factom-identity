@@ -87,7 +87,7 @@ async function update(cli, rootChainId, fctAddress, sk1, ecPrivateAddress) {
     }
 
     const entry = Entry.builder(getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1)).build();
-    return await cli.addEntry(entry, ecPrivateAddress);
+    return await cli.add(entry, ecPrivateAddress);
 }
 
 function generateUpdateEntry(rootChainId, fctAddress, sk1) {

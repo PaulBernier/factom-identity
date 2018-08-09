@@ -80,7 +80,7 @@ async function update(cli, rootChainId, efficiency, sk1, ecPrivateAddress) {
     }
 
     const entry = Entry.builder(getEfficiencyUpdateEntry(rootChainId, rootChain.serverManagementSubchainId, efficiency, sk1)).build();
-    return await cli.addEntry(entry, ecPrivateAddress);
+    return await cli.add(entry, ecPrivateAddress);
 }
 
 function generateUpdateEntry(rootChainId, serverManagementSubchainId, efficiency, sk1) {
