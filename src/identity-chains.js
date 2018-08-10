@@ -1,8 +1,12 @@
 const { sha256d, verify } = require('./crypto');
+const { isValidIdentityChainId } = require('./validation');
 const { VERSION_0 } = require('./constant');
 
 async function getIdentityRootChain(cli, rootChainId) {
-
+    if (!isValidIdentityChainId(rootChainId)) {
+        throw new Error(`Invalid root chain id ${rootChainId}`);
+    }
+    
     const entries = await cli.getAllEntriesOfChain(rootChainId);
 
     const extIds = entries[0].extIds;

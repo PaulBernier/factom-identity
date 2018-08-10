@@ -85,7 +85,7 @@ async function update(cli, rootChainId, efficiency, sk1, ecPrivateAddress) {
 
 function generateUpdateEntry(rootChainId, serverManagementSubchainId, efficiency, sk1) {
     if (rootChainId === serverManagementSubchainId) {
-        throw new Error('Root chain id cannot be the same as the server management subchain id');
+        throw new Error(`The root chain id cannot be the same as the server management subchain id (${rootChainId})`);
     }
     if (!isValidIdentityChainId(rootChainId)) {
         throw new Error(`Invalid root chain id ${rootChainId}`);

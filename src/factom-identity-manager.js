@@ -1,6 +1,7 @@
 const { FactomCli } = require('factom');
 const coinbaseAdress = require('./coinbase-address');
 const efficiency = require('./efficiency');
+const coinbaseCancel = require('./coinbase-cancel');
 const identity = require('./identity');
 
 class FactomIdentityManager {
@@ -26,6 +27,10 @@ class FactomIdentityManager {
 
     async updateEfficiency(rootChainId, eff, sk1, ecPrivateAddress) {
         return efficiency.update(this.cli, rootChainId, eff, sk1, ecPrivateAddress);
+    }
+
+    async addCoinbaseCancel(rootChainId, descriptorHeight, descriptorIndex, sk1, ecPrivateAddress) {
+        return coinbaseCancel.add(this.cli, rootChainId, descriptorHeight, descriptorIndex, sk1, ecPrivateAddress);
     }
 }
 

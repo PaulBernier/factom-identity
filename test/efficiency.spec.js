@@ -3,7 +3,7 @@ const eff = require('../src/efficiency');
 
 describe('Efficiency', function () {
 
-    it('should validate addresses', function () {
+    it('should reject equal root chain id and server management subchain id', function () {
         try {
             eff.generateUpdateEntry(
                 '888888b2e7c7c63655fa85e0b0c43b4b036a6bede51d38964426f122f61c5584',

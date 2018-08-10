@@ -34,10 +34,10 @@ function isValidSk(prefix, key) {
     }
 }
 
-function isValidIdentityChainId(rootChainId) {
-    return typeof rootChainId === 'string' &&
-        rootChainId.length === 64 &&
-        rootChainId.startsWith('888888');
+function isValidIdentityChainId(identityChainId) {
+    return typeof identityChainId === 'string' &&
+        identityChainId.length === 64 &&
+        identityChainId.startsWith('888888');
 }
 
 module.exports = {
