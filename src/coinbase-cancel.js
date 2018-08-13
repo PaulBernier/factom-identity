@@ -7,6 +7,9 @@ async function add(cli, rootChainId, height, index, sk1, ecPrivateAddress) {
     if (!isValidEcPrivateAddress(ecPrivateAddress)) {
         throw new Error(`Invalid private EC address ${ecPrivateAddress}`);
     }
+    if (!isValidSk1(sk1)) {
+        throw new Error('Lowest level identity key (sk1) is not valid');
+    }
     
     const balance = await cli.getBalance(ecPrivateAddress);
     if (balance < 1) {

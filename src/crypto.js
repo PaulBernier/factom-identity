@@ -18,8 +18,16 @@ function privateKeyToPublicKey(privateKey, enc) {
     return Buffer.from(key.getPublic());
 }
 
-function extractSecretFromIdentityKey(sk) {
-    return Buffer.from(base58.decode(sk).slice(3, 35));
+function extractSecretFromIdentityKey(key) {
+    let hexKey;
+    // Need to be decoded if human readable format
+    if (key.slice(0, 2) === 'sk') {
+        hexKey = Buffer.from(base58.decode(key));
+    } else {
+        hexKey = Buffer.from(key, 'hex');
+    }
+
+    return Buffer.from(hexKey.slice(3, 35));
 }
 
 function verify(keyBuff, data, signature) {
