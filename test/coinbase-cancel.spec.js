@@ -12,6 +12,7 @@ describe('Coinbase cancel', function () {
             5,
             'sk13iLKJfxNQg8vpSmjacEgEQAnXkn7rbjd5ewexc1Un5wVPa7KTk');
 
+        assert.equal(entry.chainId.toString('hex'), '888888b2e7c7c63655fa85e0b0c43b4b036a6bede51d38964426f122f61c5584');
         assert.equal(entry.extIds[0].toString('hex'), '00');
         assert.equal(entry.extIds[1].toString('hex'), '436f696e626173652043616e63656c');
         assert.equal(entry.extIds[2].toString('hex'), '888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762');

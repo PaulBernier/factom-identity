@@ -1,4 +1,4 @@
-const { Entry, isValidFctPublicAddress, isValidEcPrivateAddress, addressToKey } = require('factom');
+const { Entry, isValidFctPublicAddress, isValidEcPrivateAddress, addressToRcd } = require('factom');
 const base58 = require('base-58');
 const { getIdentityRootChain } = require('./identity-chains');
 const { getNowTimestamp8BytesBuffer } = require('./util');
@@ -108,7 +108,7 @@ function getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1) {
     const version = Buffer.from('00', 'hex');
     const marker = Buffer.from('Coinbase Address', 'utf8');
     const chainId = Buffer.from(rootChainId, 'hex');
-    const factoidAddress = addressToKey(fctAddress);
+    const factoidAddress = addressToRcd(fctAddress);
     const timestamp = getNowTimestamp8BytesBuffer();
 
     const dataToSign = Buffer.concat([version, marker, chainId, factoidAddress, timestamp]);
