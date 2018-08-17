@@ -1,5 +1,4 @@
-const { Entry, isValidFctPublicAddress, isValidEcPrivateAddress, addressToRcd } = require('factom');
-const base58 = require('base-58');
+const { Entry, isValidFctPublicAddress, isValidEcPrivateAddress, addressToRcd, rcdHashToPublicFctAddress } = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
 const { getNowTimestamp8BytesBuffer } = require('./util');
 const { sha256d, verify, privateKeyToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
@@ -17,7 +16,7 @@ function extract(rootChainId, rootEntries, identityKey1) {
                 registrationEntryHash: entry.hash().toString('hex'),
                 registrationTimestamp: entry.blockContext.entryTimestamp,
                 registrationDirectoryBlockHeight: entry.blockContext.directoryBlockHeight,
-                address: keyToFctPublicAddress(entry.extIds[3])
+                address: rcdHashToPublicFctAddress(entry.extIds[3])
             };
         }
     }
@@ -30,7 +29,7 @@ function extractHistory(rootChainId, rootEntries, identityKey1) {
             registrationEntryHash: e.hash().toString('hex'),
             registrationTimestamp: e.blockContext.entryTimestamp,
             registrationDirectoryBlockHeight: e.blockContext.directoryBlockHeight,
-            address: keyToFctPublicAddress(e.extIds[3])
+            address: rcdHashToPublicFctAddress(e.extIds[3])
         }));
 }
 
@@ -51,13 +50,6 @@ function isValidCoinbaseAddressRegistration(entry, rootChainId, identityKey1) {
     }
 
     return true;
-}
-
-// TODO: this should be implemented in factom.js
-function keyToFctPublicAddress(key) {
-    const address = Buffer.concat([Buffer.from('5fb1', 'hex'), key]);
-    const checksum = sha256d(address);
-    return base58.encode(Buffer.concat([address, checksum.slice(0, 4)]));
 }
 
 ///////////////// Update /////////////////
