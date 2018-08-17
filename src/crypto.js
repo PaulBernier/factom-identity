@@ -1,21 +1,14 @@
-const crypto = require('crypto');
-const base58 = require('base-58');
-const EdDSA = require('elliptic').eddsa;
-const ec = new EdDSA('ed25519');
-
-function sha256(data) {
-    const hash = crypto.createHash('sha256');
-    hash.update(data);
-    return hash.digest();
-}
+const base58 = require('base-58'),
+    sha256 = require('hash.js/lib/hash/sha/256'),
+    nacl = require('tweetnacl/nacl-fast').sign;
 
 function sha256d(data) {
-    return sha256(sha256(data));
+    return Buffer.from(sha256().update(sha256().update(data).digest()).digest());
 }
 
-function privateKeyToPublicKey(privateKey, enc) {
-    const key = ec.keyFromSecret(Buffer.from(privateKey, enc));
-    return Buffer.from(key.getPublic());
+function secretToPublicKey(secret) {
+    const key = nacl.keyPair.fromSeed(secret);
+    return Buffer.from(key.publicKey);
 }
 
 function extractSecretFromIdentityKey(key) {
@@ -30,17 +23,17 @@ function extractSecretFromIdentityKey(key) {
     return Buffer.from(hexKey.slice(3, 35));
 }
 
-function verify(keyBuff, data, signature) {
-    const key = ec.keyFromPublic([...keyBuff.slice(1)]);
-    return key.verify(data, [...signature]);
+function verify(identityKeyPreImage, data, signature) {
+    const publicKey = identityKeyPreImage.slice(1);
+    return nacl.detached.verify(data, signature, publicKey);
 }
 
 function sign(secret, dataToSign) {
-    const pub = privateKeyToPublicKey(secret);
+    const pub = secretToPublicKey(secret);
     const identityKeyPreImage = Buffer.concat([Buffer.from('01', 'hex'), pub]);
 
-    const key = ec.keyFromSecret(secret);
-    const signature = Buffer.from(key.sign(dataToSign).toBytes());
+    const key = nacl.keyPair.fromSeed(secret);
+    const signature = Buffer.from(nacl.detached(dataToSign, key.secretKey));
 
     return {
         identityKeyPreImage: identityKeyPreImage,
@@ -53,6 +46,6 @@ module.exports = {
     sha256d,
     verify,
     sign,
-    privateKeyToPublicKey,
+    secretToPublicKey,
     extractSecretFromIdentityKey
 };

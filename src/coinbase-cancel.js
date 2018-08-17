@@ -1,5 +1,5 @@
 const { Entry, isValidEcPrivateAddress } = require('factom');
-const { sha256d, privateKeyToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
+const { sha256d, secretToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
 const { getIdentityRootChain } = require('./identity-chains');
 const { isValidSk1, isValidIdentityChainId } = require('./validation');
 
@@ -18,7 +18,7 @@ async function add(cli, rootChainId, height, index, sk1, ecPrivateAddress) {
 
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
-    const identityKey = sha256d(Buffer.concat([Buffer.from('01', 'hex'), privateKeyToPublicKey(extractSecretFromIdentityKey(sk1))]));
+    const identityKey = sha256d(Buffer.concat([Buffer.from('01', 'hex'), secretToPublicKey(extractSecretFromIdentityKey(sk1))]));
     if (!rootChain.identityKeys[0].equals(identityKey)) {
         throw new Error(`The SK1 key cannot sign in the Identity Root Chain ${rootChainId}`);
     }

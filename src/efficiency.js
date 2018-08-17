@@ -2,7 +2,7 @@ const { Entry, isValidEcPrivateAddress } = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
 const { isValidSk1, isValidIdentityChainId } = require('./validation');
 const { getNowTimestamp8BytesBuffer } = require('./util');
-const { sha256d, verify, privateKeyToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
+const { sha256d, verify, secretToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
 const { VERSION_0 } = require('./constant');
 
 ///////////////// Read /////////////////
@@ -37,7 +37,8 @@ function extractHistory(rootChainId, managementEntries, identityKey1) {
 function isValidEfficiencyRegistration(entry, rootChainId, identityKey1) {
     const extIds = entry.extIds;
 
-    if (!extIds[0].equals(VERSION_0) ||
+    if (extIds.length !== 7 ||
+        !extIds[0].equals(VERSION_0) ||
         extIds[1].toString() !== 'Server Efficiency' ||
         extIds[2].toString('hex') !== rootChainId ||
         extIds[3].length !== 2 ||
@@ -74,7 +75,7 @@ async function update(cli, rootChainId, efficiency, sk1, ecPrivateAddress) {
 
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
-    const identityKey = sha256d(Buffer.concat([Buffer.from('01', 'hex'), privateKeyToPublicKey(extractSecretFromIdentityKey(sk1))]));
+    const identityKey = sha256d(Buffer.concat([Buffer.from('01', 'hex'), secretToPublicKey(extractSecretFromIdentityKey(sk1))]));
     if (!rootChain.identityKeys[0].equals(identityKey)) {
         throw new Error(`The SK1 cannot sign in the Identity Root Chain ${rootChainId}`);
     }
