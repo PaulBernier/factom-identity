@@ -29,7 +29,7 @@ describe('Coinbase address', function () {
             .extId('000000005aeb63ff')
             .extId('014e5e8de90c21c09df91e8b05129404d55f0f555a2fe31800d53d6b42cf643f8c')
             .extId('74fe4060bad3427598546838dcc41e4939f4fa9c85f633aab9c8d8a68d56a1086be7d4b38cfd99ec430610f56b62b630aba307ad5f584b532ddc07dd2db92a09')
-            .entryBlockContext({ entryTimestamp: 1514486120, directoryBlockHeight: 34459 })
+            .blockContext({ entryTimestamp: 1514486120, directoryBlockHeight: 34459 })
             .build();
 
         const e2 = Entry.builder()
@@ -41,7 +41,7 @@ describe('Coinbase address', function () {
             .extId('000000005aed100c')
             .extId('014e5e8de90c21c09df91e8b05129404d55f0f555a2fe31800d53d6b42cf643f8c')
             .extId('ec610761cb956106307d0bd1789a1a3ead4e2ad02824b2be276b9977b833bf09f644ad09b70698446183b706e03e8773bc2d0a4b04e778c3244c4503f6ec8703')
-            .entryBlockContext({ entryTimestamp: 1534486120, directoryBlockHeight: 42189 })
+            .blockContext({ entryTimestamp: 1534486120, directoryBlockHeight: 42189 })
             .build();
 
         const otherEntry = Entry.builder()
@@ -71,7 +71,7 @@ describe('Coinbase address', function () {
             .extId('000000005aeb63ff')
             .extId('014e5e8de90c21c09df91e8b05129404d55f0f555a2fe31800d53d6b42cf643f8c')
             .extId('74fe4060bad3427598546838dcc41e4939f4fa9c85f633aab9c8d8a68d56a1086be7d4b38cfd99ec430610f56b62b630aba307ad5f584b532ddc07dd2db92a09')
-            .entryBlockContext({ entryTimestamp: 1514486120, directoryBlockHeight: 34459 })
+            .blockContext({ entryTimestamp: 1514486120, directoryBlockHeight: 34459 })
             .build();
 
         const e2 = Entry.builder()
@@ -83,7 +83,7 @@ describe('Coinbase address', function () {
             .extId('000000005aed100c')
             .extId('014e5e8de90c21c09df91e8b05129404d55f0f555a2fe31800d53d6b42cf643f8c')
             .extId('ec610761cb956106307d0bd1789a1a3ead4e2ad02824b2be276b9977b833bf09f644ad09b70698446183b706e03e8773bc2d0a4b04e778c3244c4503f6ec8703')
-            .entryBlockContext({ entryTimestamp: 1534486120, directoryBlockHeight: 42189 })
+            .blockContext({ entryTimestamp: 1534486120, directoryBlockHeight: 42189 })
             .build();
 
         const result = coinbaseAddress.extractHistory(
