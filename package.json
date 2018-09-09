@@ -1,6 +1,6 @@
 {
     "name": "factom-identity-lib",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "Library to read and update Factom identities",
     "main": "src/factom-identity.js",
     "scripts": {
@@ -24,7 +24,7 @@
     "homepage": "https://github.com/PaulBernier/factom-identity#readme",
     "dependencies": {
         "base-58": "0.0.1",
-        "factom": "0.3.0",
+        "factom": "0.3.2",
         "hash.js": "^1.1.5",
         "tweetnacl": "^1.0.0"
     },

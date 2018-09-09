@@ -1,4 +1,4 @@
-const { Entry, isValidFctPublicAddress, isValidEcPrivateAddress, addressToRcd, rcdHashToPublicFctAddress } = require('factom');
+const { Entry, isValidFctPublicAddress, isValidEcPrivateAddress, addressToRcdHash, rcdHashToPublicFctAddress } = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
 const { getNowTimestamp8BytesBuffer } = require('./util');
 const { sha256d, verify, secretToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
@@ -101,7 +101,7 @@ function getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1) {
     const version = Buffer.from('00', 'hex');
     const marker = Buffer.from('Coinbase Address', 'utf8');
     const chainId = Buffer.from(rootChainId, 'hex');
-    const factoidAddress = addressToRcd(fctAddress);
+    const factoidAddress = addressToRcdHash(fctAddress);
     const timestamp = getNowTimestamp8BytesBuffer();
 
     const dataToSign = Buffer.concat([version, marker, chainId, factoidAddress, timestamp]);
