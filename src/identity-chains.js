@@ -50,6 +50,10 @@ function extractServerManagementSubchainId(entries, identityKeys) {
 
     const serverManagementSubchainEntry = entries.find(e => e.extIds[1].toString() === 'Register Server Management');
 
+    if (!serverManagementSubchainEntry) {
+        throw new Error('No Server Managemenet Subchain registering entry found');
+    }
+
     verifyServerManagementSubchainRegistration(serverManagementSubchainEntry, identityKeys[0]);
     return serverManagementSubchainEntry.extIds[2];
 }
