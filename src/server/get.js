@@ -3,7 +3,7 @@ const cbAddress = require('./coinbase-address');
 const eff = require('./efficiency');
 
 
-async function getInformation(cli, rootChainId) {
+async function getIdentity(cli, rootChainId) {
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
     const managementSubchain = await getServerManagementSubchain(cli, rootChain.serverManagementSubchainId, rootChainId);
@@ -20,7 +20,7 @@ async function getInformation(cli, rootChainId) {
     };
 }
 
-async function getInformationHistory(cli, rootChainId) {
+async function getIdentityHistory(cli, rootChainId) {
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
     const managementSubchain = await getServerManagementSubchain(cli, rootChain.serverManagementSubchainId, rootChainId);
@@ -39,6 +39,6 @@ async function getInformationHistory(cli, rootChainId) {
 
 
 module.exports = {
-    getInformation,
-    getInformationHistory
+    getIdentity,
+    getIdentityHistory
 };

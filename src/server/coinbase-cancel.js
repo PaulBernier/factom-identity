@@ -1,17 +1,18 @@
-const { Entry, isValidEcPrivateAddress } = require('factom');
-const { sha256d, secretToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
+const { Entry, isValidEcAddress } = require('factom');
+const { sha256d, secretToPublicKey } = require('../crypto');
+const { extractSecretFromIdentityKey, sign } = require('./common');
 const { getIdentityRootChain } = require('./identity-chains');
-const { isValidSk1, isValidIdentityChainId } = require('./validation');
+const { isValidSk1, isValidServerIdentityChainId } = require('./validation');
 
-async function add(cli, rootChainId, height, index, sk1, ecPrivateAddress) {
-    if (!isValidEcPrivateAddress(ecPrivateAddress)) {
-        throw new Error(`Invalid private EC address ${ecPrivateAddress}`);
+async function add(cli, rootChainId, height, index, sk1, ecAddress) {
+    if (!isValidEcAddress(ecAddress)) {
+        throw new Error(`Invalid EC address ${ecAddress}`);
     }
     if (!isValidSk1(sk1)) {
         throw new Error('Lowest level identity key (sk1) is not valid');
     }
     
-    const balance = await cli.getBalance(ecPrivateAddress);
+    const balance = await cli.getBalance(ecAddress);
     if (balance < 1) {
         throw new Error('Insufficient EC balance to pay for adding coinbase cancel entry');
     }
@@ -25,14 +26,23 @@ async function add(cli, rootChainId, height, index, sk1, ecPrivateAddress) {
 
     const entry = Entry.builder(generateCoinbaseCancelEntry(rootChainId, rootChain.serverManagementSubchainId.toString('hex'), height, index, sk1)).build();
 
-    return await cli.add(entry, ecPrivateAddress);
+    return await cli.add(entry, ecAddress);
 }
 
+/**
+ * @memberof server
+ * @param {string} rootChainId - Identity Root Chain Id.
+ * @param {string} serverManagementSubchainId - Server Management Subchain Id.
+ * @param {number} height - Block height of the coinbase descriptor to cancel.
+ * @param {number} index - Index of the coinbase descriptor to cancel.
+ * @param {string} sk1 - Server identity Secret Key 1.
+ * @returns {{{chainId: Buffer, extIds: Buffer[], content: Buffer}}}
+ */
 function generateCoinbaseCancelEntry(rootChainId, serverManagementSubchainId, height, index, sk1) {
-    if (!isValidIdentityChainId(rootChainId)) {
+    if (!isValidServerIdentityChainId(rootChainId)) {
         throw new Error(`Invalid root chain id ${rootChainId}`);
     }
-    if (!isValidIdentityChainId(serverManagementSubchainId)) {
+    if (!isValidServerIdentityChainId(serverManagementSubchainId)) {
         throw new Error(`Invalid server management subchain id ${serverManagementSubchainId}`);
     }
     if (rootChainId === serverManagementSubchainId) {

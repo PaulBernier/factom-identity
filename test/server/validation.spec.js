@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const validation = require('../src/validation');
+const validation = require('../../src/server/validation');
 
 describe('Validation', function () {
 

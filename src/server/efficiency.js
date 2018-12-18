@@ -1,15 +1,15 @@
-const { Entry, isValidEcPrivateAddress } = require('factom');
+const { Entry, isValidEcAddress } = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
-const { isValidSk1, isValidIdentityChainId } = require('./validation');
-const { getNowTimestamp8BytesBuffer } = require('./util');
-const { sha256d, verify, secretToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
+const { isValidSk1, isValidServerIdentityChainId } = require('./validation');
+const { getNowTimestamp8BytesBuffer } = require('./common');
+const { verify, extractSecretFromIdentityKey, sign } = require('./common');
+const { sha256d, secretToPublicKey } = require('../crypto');
 const { VERSION_0 } = require('./constant');
 
 ///////////////// Read /////////////////
 
 function extract(rootChainId, managementEntries, identityKey1) {
 
-    // TODO: use the timestamp of the message for ordering and not ordering of entries?
     for (const entry of managementEntries.reverse()) {
         if (isValidEfficiencyRegistration(entry, rootChainId, identityKey1)) {
             return {
@@ -57,18 +57,18 @@ function isValidEfficiencyRegistration(entry, rootChainId, identityKey1) {
 
 ///////////////// Update /////////////////
 
-async function update(cli, rootChainId, efficiency, sk1, ecPrivateAddress) {
+async function update(cli, rootChainId, efficiency, sk1, ecAddress) {
     if (!isValidSk1(sk1)) {
         throw new Error('Lowest level identity key (sk1) is not valid');
     }
     if (typeof efficiency !== 'number' || efficiency < 0 || efficiency > 100) {
         throw new Error('Efficiency must be a number between 0 and 100');
     }
-    if (!isValidEcPrivateAddress(ecPrivateAddress)) {
-        throw new Error(`Invalid private EC address ${ecPrivateAddress}`);
+    if (!isValidEcAddress(ecAddress)) {
+        throw new Error(`Invalid EC address ${ecAddress}`);
     }
 
-    const balance = await cli.getBalance(ecPrivateAddress);
+    const balance = await cli.getBalance(ecAddress);
     if (balance < 1) {
         throw new Error('Insufficient EC balance to pay for updating efficiency');
     }
@@ -81,17 +81,27 @@ async function update(cli, rootChainId, efficiency, sk1, ecPrivateAddress) {
     }
 
     const entry = Entry.builder(getEfficiencyUpdateEntry(rootChainId, rootChain.serverManagementSubchainId, efficiency, sk1)).build();
-    return await cli.add(entry, ecPrivateAddress);
+    return await cli.add(entry, ecAddress);
 }
 
+/**
+ * Generate Entry object to update a server identity efficiency.
+ * @memberof server
+ * @function generateEfficiencyUpdateEntry
+ * @param {string} rootChainId - Identity Root Chain Id.
+ * @param {string} serverManagementSubchainId - Server Management Subchain Id.
+ * @param {number} efficiency - Efficiency between 0 and 100.
+ * @param {string} sk1 - Server identity Secret Key 1.
+ * @returns {{chainId: Buffer, extIds: Buffer[], content: Buffer}}
+ */
 function generateUpdateEntry(rootChainId, serverManagementSubchainId, efficiency, sk1) {
     if (rootChainId === serverManagementSubchainId) {
         throw new Error(`The root chain id cannot be the same as the server management subchain id (${rootChainId})`);
     }
-    if (!isValidIdentityChainId(rootChainId)) {
+    if (!isValidServerIdentityChainId(rootChainId)) {
         throw new Error(`Invalid root chain id ${rootChainId}`);
     }
-    if (!isValidIdentityChainId(serverManagementSubchainId)) {
+    if (!isValidServerIdentityChainId(serverManagementSubchainId)) {
         throw new Error(`Invalid server management subchain id ${serverManagementSubchainId}`);
     }
     if (!isValidSk1(sk1)) {

@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 const { Entry } = require('factom');
-const coinbaseAddress = require('../src/coinbase-address');
+const coinbaseAddress = require('../../src/server/coinbase-address');
 
 describe('Coinbase address', function () {
 

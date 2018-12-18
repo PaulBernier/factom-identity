@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const coinbaseCancel = require('../src/coinbase-cancel');
+const coinbaseCancel = require('../../src/server/coinbase-cancel');
 
 describe('Coinbase cancel', function () {
 

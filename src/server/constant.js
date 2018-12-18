@@ -1,6 +1,6 @@
 const VERSION_0 = Buffer.alloc(1);
 
-const IDENTITY_KEY_HEX_PREFIX_MAP = {
+const SERVER_IDENTITY_KEY_HEX_PREFIX_MAP = {
     'sk1': '4db6c9',
     'sk2': '4db6e7',
     'sk3': '4db705',
@@ -13,5 +13,5 @@ const IDENTITY_KEY_HEX_PREFIX_MAP = {
 
 module.exports = {
     VERSION_0,
-    IDENTITY_KEY_HEX_PREFIX_MAP
+    SERVER_IDENTITY_KEY_HEX_PREFIX_MAP
 };

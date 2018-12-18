@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const eff = require('../src/efficiency');
+const eff = require('../../src/server/efficiency');
 
 describe('Efficiency', function () {
 

@@ -1,6 +1,6 @@
 const base58 = require('base-58');
-const { sha256d } = require('./crypto');
-const { IDENTITY_KEY_HEX_PREFIX_MAP } = require('./constant');
+const { sha256d } = require('../crypto');
+const { SERVER_IDENTITY_KEY_HEX_PREFIX_MAP } = require('./constant');
 
 
 function isValidSk1(key) {
@@ -27,7 +27,7 @@ function isValidSk(prefix, key) {
     let bytes;
     if (key.slice(0, 3) === prefix) {
         bytes = Buffer.from(base58.decode(key));
-    } else if (key.slice(0, 6) === IDENTITY_KEY_HEX_PREFIX_MAP[prefix]) {
+    } else if (key.slice(0, 6) === SERVER_IDENTITY_KEY_HEX_PREFIX_MAP[prefix]) {
         bytes = Buffer.from(key, 'hex');
     } else {
         return false;
@@ -45,7 +45,7 @@ function isValidSk(prefix, key) {
     return false;
 }
 
-function isValidIdentityChainId(identityChainId) {
+function isValidServerIdentityChainId(identityChainId) {
     return typeof identityChainId === 'string' &&
         identityChainId.length === 64 &&
         identityChainId.startsWith('888888');
@@ -56,5 +56,5 @@ module.exports = {
     isValidSk2,
     isValidSk3,
     isValidSk4,
-    isValidIdentityChainId,
+    isValidServerIdentityChainId
 };

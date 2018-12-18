@@ -1,15 +1,15 @@
-const { Entry, isValidFctPublicAddress, isValidEcPrivateAddress, addressToRcdHash, rcdHashToPublicFctAddress } = require('factom');
+const { Entry, isValidFctPublicAddress, isValidEcAddress, addressToRcdHash, rcdHashToPublicFctAddress } = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
-const { getNowTimestamp8BytesBuffer } = require('./util');
-const { sha256d, verify, secretToPublicKey, extractSecretFromIdentityKey, sign } = require('./crypto');
-const { isValidSk1, isValidIdentityChainId } = require('./validation');
+const { getNowTimestamp8BytesBuffer } = require('./common');
+const { verify, extractSecretFromIdentityKey, sign } = require('./common');
+const { sha256d, secretToPublicKey, } = require('../crypto');
+const { isValidSk1, isValidServerIdentityChainId } = require('./validation');
 const { VERSION_0 } = require('./constant');
 
 
 ///////////////// Read /////////////////
 
 function extract(rootChainId, rootEntries, identityKey1) {
-    // TODO: use the timestamp of the message for ordering and not ordering of entries?
     for (const entry of rootEntries.reverse()) {
         if (isValidCoinbaseAddressRegistration(entry, rootChainId, identityKey1)) {
             return {
@@ -56,18 +56,18 @@ function isValidCoinbaseAddressRegistration(entry, rootChainId, identityKey1) {
 ///////////////// Update /////////////////
 
 
-async function update(cli, rootChainId, fctAddress, sk1, ecPrivateAddress) {
+async function update(cli, rootChainId, fctAddress, sk1, ecAddress) {
     if (!isValidSk1(sk1)) {
         throw new Error('Lowest level identity key (sk1) is not valid');
     }
     if (!isValidFctPublicAddress(fctAddress)) {
         throw new Error(`Invalid public FCT address: ${fctAddress}`);
     }
-    if (!isValidEcPrivateAddress(ecPrivateAddress)) {
-        throw new Error(`Invalid private EC address ${ecPrivateAddress}`);
+    if (!isValidEcAddress(ecAddress)) {
+        throw new Error(`Invalid EC address ${ecAddress}`);
     }
 
-    const balance = await cli.getBalance(ecPrivateAddress);
+    const balance = await cli.getBalance(ecAddress);
     if (balance < 1) {
         throw new Error('Insufficient EC balance to pay for updating coinbase address');
     }
@@ -76,15 +76,24 @@ async function update(cli, rootChainId, fctAddress, sk1, ecPrivateAddress) {
 
     const identityKey = sha256d(Buffer.concat([Buffer.from('01', 'hex'), secretToPublicKey(extractSecretFromIdentityKey(sk1))]));
     if (!rootChain.identityKeys[0].equals(identityKey)) {
-        throw new Error(`The SK1 key cannot sign in the Identity Root Chain ${rootChainId}`);
+        throw new Error(`The SK1 key cannot sign entries in the Identity Root Chain ${rootChainId}`);
     }
 
     const entry = Entry.builder(getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1)).build();
-    return await cli.add(entry, ecPrivateAddress);
+    return await cli.add(entry, ecAddress);
 }
 
+/**
+ * Generate Entry object to update a server identity coinbase address.
+ * @memberof server
+ * @function generateCoinbaseAddressUpdateEntry
+ * @param {string} rootChainId - Identity Root Chain Id.
+ * @param {string} fctAddress - Public Factoid address to set as the new coinbase address.
+ * @param {string} sk1 - Server identity Secret Key 1.
+ * @returns {{{chainId: Buffer, extIds: Buffer[], content: Buffer}}}
+ */
 function generateUpdateEntry(rootChainId, fctAddress, sk1) {
-    if (!isValidIdentityChainId(rootChainId)) {
+    if (!isValidServerIdentityChainId(rootChainId)) {
         throw new Error(`Invalid root chain id ${rootChainId}`);
     }
     if (!isValidSk1(sk1)) {
