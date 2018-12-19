@@ -1,6 +1,6 @@
 {
     "name": "factom-identity-lib",
-    "version": "0.2.0-rc1",
+    "version": "0.2.0-rc2",
     "description": "Library to read and update Factom identities",
     "main": "src/index.js",
     "scripts": {

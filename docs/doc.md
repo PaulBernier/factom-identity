@@ -28,47 +28,54 @@
         -   [Examples][24]
         -   [createIdentity][25]
             -   [Parameters][26]
-        -   [getActivePublicIdentityKeys][27]
+        -   [generateIdentityKeyFromWalletSeed][27]
             -   [Parameters][28]
-        -   [getSecretIdentityKey][29]
+        -   [getActivePublicIdentityKeys][29]
             -   [Parameters][30]
-        -   [isIdentityKeyActive][31]
-            -   [Parameters][32]
-        -   [replaceIdentityKey][33]
-            -   [Parameters][34]
-    -   [extractCryptoMaterial][35]
-        -   [Parameters][36]
-    -   [generateRandomIdentityKeyPair][37]
-    -   [getPublicIdentityKey][38]
-        -   [Parameters][39]
-    -   [isValidIdentityKey][40]
-        -   [Parameters][41]
-    -   [isValidPublicIdentityKey][42]
+        -   [getAllIdentityKeys][31]
+        -   [getSecretIdentityKey][32]
+            -   [Parameters][33]
+        -   [importIdentityKeys][34]
+            -   [Parameters][35]
+        -   [isIdentityKeyActive][36]
+            -   [Parameters][37]
+        -   [removeIdentityKeys][38]
+            -   [Parameters][39]
+        -   [replaceIdentityKey][40]
+            -   [Parameters][41]
+    -   [extractCryptoMaterial][42]
         -   [Parameters][43]
-    -   [isValidSecretIdentityKey][44]
-        -   [Parameters][45]
-    -   [keyToPublicIdentityKey][46]
-        -   [Parameters][47]
-    -   [seedToSecretIdentityKey][48]
-        -   [Parameters][49]
+    -   [generateRandomIdentityKeyPair][44]
+    -   [getPublicIdentityKey][45]
+        -   [Parameters][46]
+    -   [isValidIdentityKey][47]
+        -   [Parameters][48]
+    -   [isValidPublicIdentityKey][49]
+        -   [Parameters][50]
+    -   [isValidSecretIdentityKey][51]
+        -   [Parameters][52]
+    -   [keyToPublicIdentityKey][53]
+        -   [Parameters][54]
+    -   [seedToSecretIdentityKey][55]
+        -   [Parameters][56]
 
 ## server
 
-[src/server/index.js:6-6][50]
+[src/server/index.js:6-6][57]
 
 Module containing functions about Factom server identities.
 
 ### FactomServerIdentityManager
 
-[src/server/factom-server-identity-manager.js:27-88][51]
+[src/server/factom-server-identity-manager.js:27-88][58]
 
 Main class to read and write Factom identities.
 
 #### Parameters
 
--   `opts` **[Object][52]?** Options of connection to factomd and factom-walletd.
-    -   `opts.factomd` **[Object][52]?** Options of connection to factomd. See [https://factomjs.luciap.ca/#connectionoptions][53].
-    -   `opts.walletd` **[Object][52]?** Options of connection to factom-walletd. See [https://factomjs.luciap.ca/#connectionoptions][53].
+-   `opts` **[Object][59]?** Options of connection to factomd and factom-walletd.
+    -   `opts.factomd` **[Object][59]?** Options of connection to factomd. See [https://factomjs.luciap.ca/#connectionoptions][60].
+    -   `opts.walletd` **[Object][59]?** Options of connection to factom-walletd. See [https://factomjs.luciap.ca/#connectionoptions][60].
 
 #### Examples
 
@@ -89,130 +96,130 @@ const manager = new FactomServerIdentityManager({
 
 #### addCoinbaseCancel
 
-[src/server/factom-server-identity-manager.js:85-87][54]
+[src/server/factom-server-identity-manager.js:85-87][61]
 
 Add a coinbase cancel message to a server identity.
 
 ##### Parameters
 
--   `rootChainId` **[string][55]** Identity Root Chain Id.
--   `descriptorHeight` **[number][56]** Coinbase descriptor block height.
--   `descriptorIndex` **[number][56]** Coinbase descriptor index.
--   `sk1` **[string][55]** Server identity Secret Key 1.
--   `ecAddress` **[string][55]** Entry Credit address paying for the entry.
+-   `rootChainId` **[string][62]** Identity Root Chain Id.
+-   `descriptorHeight` **[number][63]** Coinbase descriptor block height.
+-   `descriptorIndex` **[number][63]** Coinbase descriptor index.
+-   `sk1` **[string][62]** Server identity Secret Key 1.
+-   `ecAddress` **[string][62]** Entry Credit address paying for the entry.
 
-Returns **{txId: [string][55], repeatedCommit: [boolean][57], chainId: [string][55], entryHash: [string][55]}** Info about the Entry insertion.
+Returns **{txId: [string][62], repeatedCommit: [boolean][64], chainId: [string][62], entryHash: [string][62]}** Info about the Entry insertion.
 
 #### getServerIdentity
 
-[src/server/factom-server-identity-manager.js:38-40][58]
+[src/server/factom-server-identity-manager.js:38-40][65]
 
 Get a server identity information.
 
 ##### Parameters
 
--   `rootChainId` **[string][55]** Identity Root Chain Id.
+-   `rootChainId` **[string][62]** Identity Root Chain Id.
 
-Returns **{rootChainId: [string][55], serverManagementSubchainId: [string][55], coinbaseAddress: [string][55], efficiency: [number][56], identityKeys: [Array][59]&lt;[string][55]>}** 
+Returns **{rootChainId: [string][62], serverManagementSubchainId: [string][62], coinbaseAddress: [string][62], efficiency: [number][63], identityKeys: [Array][66]&lt;[string][62]>}** 
 
 #### getServerIdentityHistory
 
-[src/server/factom-server-identity-manager.js:48-50][60]
+[src/server/factom-server-identity-manager.js:48-50][67]
 
 Get a server identity information history.
 
 ##### Parameters
 
--   `rootChainId` **[string][55]** Identity Root Chain Id.
+-   `rootChainId` **[string][62]** Identity Root Chain Id.
 
-Returns **{rootChainId: [string][55], serverManagementSubchainId: [string][55], coinbaseAddressHistory: [Array][59]&lt;[Object][52]>, efficiencyHistory: [Array][59]&lt;[Object][52]>, identityKeys: [Array][59]&lt;[string][55]>}** 
+Returns **{rootChainId: [string][62], serverManagementSubchainId: [string][62], coinbaseAddressHistory: [Array][66]&lt;[Object][59]>, efficiencyHistory: [Array][66]&lt;[Object][59]>, identityKeys: [Array][66]&lt;[string][62]>}** 
 
 #### updateCoinbaseAddress
 
-[src/server/factom-server-identity-manager.js:60-62][61]
+[src/server/factom-server-identity-manager.js:60-62][68]
 
 Update the coinbase address of a server identity.
 
 ##### Parameters
 
--   `rootChainId` **[string][55]** Identity Root Chain Id.
--   `fctAddress` **[string][55]** Public Factoid address to set as coinbase address.
--   `sk1` **[string][55]** Server identity Secret Key 1.
--   `ecAddress` **[string][55]** Entry Credit address paying for the entry.
+-   `rootChainId` **[string][62]** Identity Root Chain Id.
+-   `fctAddress` **[string][62]** Public Factoid address to set as coinbase address.
+-   `sk1` **[string][62]** Server identity Secret Key 1.
+-   `ecAddress` **[string][62]** Entry Credit address paying for the entry.
 
-Returns **{txId: [string][55], repeatedCommit: [boolean][57], chainId: [string][55], entryHash: [string][55]}** Info about the Entry insertion.
+Returns **{txId: [string][62], repeatedCommit: [boolean][64], chainId: [string][62], entryHash: [string][62]}** Info about the Entry insertion.
 
 #### updateEfficiency
 
-[src/server/factom-server-identity-manager.js:72-74][62]
+[src/server/factom-server-identity-manager.js:72-74][69]
 
 Update the efficiency of a server identity.
 
 ##### Parameters
 
--   `rootChainId` **[string][55]** Identity Root Chain Id.
--   `efficiency` **[number][56]** Efficiency between 0 and 100.
--   `sk1` **[string][55]** Server identity Secret Key 1.
--   `ecAddress` **[string][55]** Entry Credit address paying for the entry.
+-   `rootChainId` **[string][62]** Identity Root Chain Id.
+-   `efficiency` **[number][63]** Efficiency between 0 and 100.
+-   `sk1` **[string][62]** Server identity Secret Key 1.
+-   `ecAddress` **[string][62]** Entry Credit address paying for the entry.
 
-Returns **{txId: [string][55], repeatedCommit: [boolean][57], chainId: [string][55], entryHash: [string][55]}** Info about the Entry insertion.
+Returns **{txId: [string][62], repeatedCommit: [boolean][64], chainId: [string][62], entryHash: [string][62]}** Info about the Entry insertion.
 
 ### generateCoinbaseAddressUpdateEntry
 
-[src/server/coinbase-address.js:95-107][63]
+[src/server/coinbase-address.js:95-107][70]
 
 Generate Entry object to update a server identity coinbase address.
 
 #### Parameters
 
--   `rootChainId` **[string][55]** Identity Root Chain Id.
--   `fctAddress` **[string][55]** Public Factoid address to set as the new coinbase address.
--   `sk1` **[string][55]** Server identity Secret Key 1.
+-   `rootChainId` **[string][62]** Identity Root Chain Id.
+-   `fctAddress` **[string][62]** Public Factoid address to set as the new coinbase address.
+-   `sk1` **[string][62]** Server identity Secret Key 1.
 
 ### generateCoinbaseCancelEntry
 
-[src/server/coinbase-cancel.js:41-78][64]
+[src/server/coinbase-cancel.js:41-78][71]
 
 #### Parameters
 
--   `rootChainId` **[string][55]** Identity Root Chain Id.
--   `serverManagementSubchainId` **[string][55]** Server Management Subchain Id.
--   `height` **[number][56]** Block height of the coinbase descriptor to cancel.
--   `index` **[number][56]** Index of the coinbase descriptor to cancel.
--   `sk1` **[string][55]** Server identity Secret Key 1.
+-   `rootChainId` **[string][62]** Identity Root Chain Id.
+-   `serverManagementSubchainId` **[string][62]** Server Management Subchain Id.
+-   `height` **[number][63]** Block height of the coinbase descriptor to cancel.
+-   `index` **[number][63]** Index of the coinbase descriptor to cancel.
+-   `sk1` **[string][62]** Server identity Secret Key 1.
 
 ### generateEfficiencyUpdateEntry
 
-[src/server/efficiency.js:97-115][65]
+[src/server/efficiency.js:97-115][72]
 
 Generate Entry object to update a server identity efficiency.
 
 #### Parameters
 
--   `rootChainId` **[string][55]** Identity Root Chain Id.
--   `serverManagementSubchainId` **[string][55]** Server Management Subchain Id.
--   `efficiency` **[number][56]** Efficiency between 0 and 100.
--   `sk1` **[string][55]** Server identity Secret Key 1.
+-   `rootChainId` **[string][62]** Identity Root Chain Id.
+-   `serverManagementSubchainId` **[string][62]** Server Management Subchain Id.
+-   `efficiency` **[number][63]** Efficiency between 0 and 100.
+-   `sk1` **[string][62]** Server identity Secret Key 1.
 
-Returns **{chainId: [Buffer][66], extIds: [Array][59]&lt;[Buffer][66]>, content: [Buffer][66]}** 
+Returns **{chainId: [Buffer][73], extIds: [Array][66]&lt;[Buffer][73]>, content: [Buffer][73]}** 
 
 ## digital
 
-[src/digital/index.js:5-5][67]
+[src/digital/index.js:5-5][74]
 
 Module containing functions about Factom digital identities.
 
 ### FactomIdentityManager
 
-[src/digital/factom-identity-manager.js:28-103][68]
+[src/digital/factom-identity-manager.js:32-145][75]
 
 Main class to read and write Factom identities.
 
 #### Parameters
 
--   `opts` **[Object][52]?** Options of connection to factomd and factom-walletd.
-    -   `opts.factomd` **[Object][52]?** Options of connection to factomd. See [https://factomjs.luciap.ca/#connectionoptions][53].
-    -   `opts.walletd` **[Object][52]?** Options of connection to factom-walletd. See [https://factomjs.luciap.ca/#connectionoptions][53].
+-   `opts` **[Object][59]?** Options of connection to factomd and factom-walletd.
+    -   `opts.factomd` **[Object][59]?** Options of connection to factomd. See [https://factomjs.luciap.ca/#connectionoptions][60].
+    -   `opts.walletd` **[Object][59]?** Options of connection to factom-walletd. See [https://factomjs.luciap.ca/#connectionoptions][60].
 
 #### Examples
 
@@ -233,171 +240,216 @@ const manager = new FactomIdentityManager({
 
 #### createIdentity
 
-[src/digital/factom-identity-manager.js:83-85][69]
+[src/digital/factom-identity-manager.js:87-89][76]
 
 Create a new identity on-chain.
 
 ##### Parameters
 
--   `name` **[Array][59]&lt;[string][55]>** Array of strings used as the "name" of the identity.
--   `keys` **([Array][59]&lt;[string][55]> | [number][56])** Either an array of identity keys (available in walletd) or a number. 
+-   `name` **[Array][66]&lt;[string][62]>** Array of strings used as the "name" of the identity.
+-   `keys` **([Array][66]&lt;[string][62]> | [number][63])** Either an array of identity keys (available in walletd) or a number. 
     If a number is provided the library creates new keys (see options argument).
--   `ecAddress` **[string][55]** Entry Credit address paying for the entry. 
+-   `ecAddress` **[string][62]** Entry Credit address paying for the entry. 
     If a public EC address is provided the library attempts to retrieve the secret part from walletd.
--   `options` **[Object][52]?** 
-    -   `options.fromWalletSeed` **[boolean][57]?** Relevant only if parameter keys is a number. 
+-   `options` **[Object][59]?** 
+    -   `options.fromWalletSeed` **[boolean][64]?** Relevant only if parameter keys is a number. 
         If true the new keys are generated from walletd (derived from its seed) and the new keys are automatically stored in walletd.
         If false the new keys are generated randomly and are _not_ automatically stored in walletd, it is user responsability to manage the new keys returned by the function.
 
+Returns **[Array][66]&lt;{identityKeys: {public: [string][62], secret: [string][62]}, txId: [string][62], repeatedCommit: [boolean][64], chainId: [string][62], entryHash: [string][62]}>** Info about the Chain creation together with the list of identity keys associated with the new identity.
+
+#### generateIdentityKeyFromWalletSeed
+
+[src/digital/factom-identity-manager.js:142-144][77]
+
+Creates a new identity key and adds it to walletd. 
+New keys are generated from the same mnemonic seed used for FCT and EC addresses.
+
+##### Parameters
+
+-   `number` **[number][63]** Number of identity keys to generate. (optional, default `1`)
+
+Returns **{public: [string][62], secret: [string][62]}** 
+
 #### getActivePublicIdentityKeys
 
-[src/digital/factom-identity-manager.js:51-53][70]
+[src/digital/factom-identity-manager.js:55-57][78]
 
 Get all the active public identity keys of an identity at a given blockchain height.
 If no block height is specified, check for the latest block height.
 
 ##### Parameters
 
--   `identityChainId` **[string][55]** Identity chain id.
--   `blockHeight` **[number][56]?** Specific blockchain height. If not provided check for the latest block.
+-   `identityChainId` **[string][62]** Identity chain id.
+-   `blockHeight` **[number][63]?** Specific blockchain height. If not provided check for the latest block.
 
-Returns **[Array][59]&lt;[string][55]>** Array of public identity keys active for the identity.
+Returns **[Array][66]&lt;[string][62]>** Array of public identity keys active for the identity.
+
+#### getAllIdentityKeys
+
+[src/digital/factom-identity-manager.js:131-133][79]
+
+Get all identity keys stored in walletd.
+
+Returns **[Array][66]&lt;{public: [string][62], secret: [string][62]}>** 
 
 #### getSecretIdentityKey
 
-[src/digital/factom-identity-manager.js:39-41][71]
+[src/digital/factom-identity-manager.js:43-45][80]
 
 Fetch corresponding identity key from the wallet if necessary.
 
 ##### Parameters
 
--   `idKey` **[string][55]** Identity key.
+-   `idKey` **[string][62]** Identity key.
 
-Returns **[string][55]** Corresponsing secret identity key.
+Returns **[string][62]** Corresponsing secret identity key.
+
+#### importIdentityKeys
+
+[src/digital/factom-identity-manager.js:114-116][81]
+
+Store keys in walletd.
+
+##### Parameters
+
+-   `secretIdKeys` **([string][62] \| [Array][66]&lt;[string][62]>)** A single secret key or an array of secret keys to import.
+
+Returns **[Array][66]&lt;{public: [string][62], secret: [string][62]}>** 
 
 #### isIdentityKeyActive
 
-[src/digital/factom-identity-manager.js:64-66][72]
+[src/digital/factom-identity-manager.js:68-70][82]
 
 Check if an identity key is (was) active for an identity at a given blockchain height.
 If no block height is specified, check for the latest block height.
 
 ##### Parameters
 
--   `identityChainId` **[string][55]** Identity chain id.
--   `idKey` **[string][55]** Public or private identity key.
--   `blockHeight` **[number][56]?** Specific blockchain height. If not provided check for the latest block.
+-   `identityChainId` **[string][62]** Identity chain id.
+-   `idKey` **[string][62]** Public or private identity key.
+-   `blockHeight` **[number][63]?** Specific blockchain height. If not provided check for the latest block.
 
-Returns **[boolean][57]** True if the identity key is active for the identity.
+Returns **[boolean][64]** True if the identity key is active for the identity.
+
+#### removeIdentityKeys
+
+[src/digital/factom-identity-manager.js:122-124][83]
+
+Remove from walletd some identity keys.
+
+##### Parameters
+
+-   `idKeys` **([string][62] \| [Array][66]&lt;[string][62]>)** 
 
 #### replaceIdentityKey
 
-[src/digital/factom-identity-manager.js:100-102][73]
+[src/digital/factom-identity-manager.js:104-106][84]
 
 Replace an identity key by another on-chain.
 
 ##### Parameters
 
--   `identityChainId` **[string][55]** Identity chain id.
--   `keys` **[Object][52]** 
-    -   `keys.oldIdKey` **[string][55]** Old public identity key to replace.
-    -   `keys.newIdKey` **[string][55]** New public identity key to take the place of oldIdKey.
-    -   `keys.signingIdKey` **[string][55]** Identity key signing for the replacement. Must be of a higher priority than oldIdKey.
+-   `identityChainId` **[string][62]** Identity chain id.
+-   `keys` **[Object][59]** 
+    -   `keys.oldIdKey` **[string][62]** Old public identity key to replace.
+    -   `keys.newIdKey` **[string][62]** New public identity key to take the place of oldIdKey.
+    -   `keys.signingIdKey` **[string][62]** Identity key signing for the replacement. Must be of a higher priority than oldIdKey.
         If a public identity key is provided the library attempts to retrieve the secret part from walletd.
--   `ecAddress` **[string][55]** Entry Credit address paying for the entry. 
+-   `ecAddress` **[string][62]** Entry Credit address paying for the entry. 
     If a public EC address is provided the library attempts to retrieve the secret part from walletd.
 
-Returns **{txId: [string][55], repeatedCommit: [boolean][57], chainId: [string][55], entryHash: [string][55]}** Info about the Entry insertion.
+Returns **{txId: [string][62], repeatedCommit: [boolean][64], chainId: [string][62], entryHash: [string][62]}** Info about the Entry insertion.
 
 ### extractCryptoMaterial
 
-[src/digital/key-helpers.js:69-74][74]
+[src/digital/key-helpers.js:69-74][85]
 
 Extract the ed25519 cryptographic material encapsulated in the identity key.
 
 #### Parameters
 
--   `idKey` **[string][55]** Public or secret identity key.
+-   `idKey` **[string][62]** Public or secret identity key.
 
-Returns **[Buffer][66]** Either the ed25519 32-byte public key or the 32-byte secret seed.
+Returns **[Buffer][73]** Either the ed25519 32-byte public key or the 32-byte secret seed.
 
 ### generateRandomIdentityKeyPair
 
-[src/digital/key-helpers.js:130-137][75]
+[src/digital/key-helpers.js:130-137][86]
 
 Generate a random identity key pair.
 
 ### getPublicIdentityKey
 
-[src/digital/key-helpers.js:82-92][76]
+[src/digital/key-helpers.js:82-92][87]
 
 Get the public identity key corresponding to the input identity key.
 
 #### Parameters
 
--   `idKey` **[string][55]** Secret (or public) identity key.
+-   `idKey` **[string][62]** Secret (or public) identity key.
 
-Returns **[string][55]** Corresponding public identity key.
+Returns **[string][62]** Corresponding public identity key.
 
 ### isValidIdentityKey
 
-[src/digital/key-helpers.js:16-40][77]
+[src/digital/key-helpers.js:16-40][88]
 
 Check if an identity key is well formed.
 
 #### Parameters
 
--   `idKey` **[string][55]** Public or secret identity key.
+-   `idKey` **[string][62]** Public or secret identity key.
 
-Returns **[boolean][57]** True if the identity key is valid.
+Returns **[boolean][64]** True if the identity key is valid.
 
 ### isValidPublicIdentityKey
 
-[src/digital/key-helpers.js:48-50][78]
+[src/digital/key-helpers.js:48-50][89]
 
 Check if a public identity key is well formed.
 
 #### Parameters
 
--   `pubIdKey` **[string][55]** Public identity key.
+-   `pubIdKey` **[string][62]** Public identity key.
 
-Returns **[boolean][57]** True if the public identity key is valid.
+Returns **[boolean][64]** True if the public identity key is valid.
 
 ### isValidSecretIdentityKey
 
-[src/digital/key-helpers.js:58-60][79]
+[src/digital/key-helpers.js:58-60][90]
 
 Check if a secret identity key is well formed.
 
 #### Parameters
 
--   `secIdKey` **[string][55]** Public identity key.
+-   `secIdKey` **[string][62]** Public identity key.
 
-Returns **[boolean][57]** True if the secret identity key is valid.
+Returns **[boolean][64]** True if the secret identity key is valid.
 
 ### keyToPublicIdentityKey
 
-[src/digital/key-helpers.js:100-102][80]
+[src/digital/key-helpers.js:100-102][91]
 
 Convert a 32-byte key to a public identity key.
 
 #### Parameters
 
--   `key` **([string][55] \| [Buffer][66])** 32-byte key.
+-   `key` **([string][62] \| [Buffer][73])** 32-byte key.
 
-Returns **[string][55]** Public identity key.
+Returns **[string][62]** Public identity key.
 
 ### seedToSecretIdentityKey
 
-[src/digital/key-helpers.js:110-112][81]
+[src/digital/key-helpers.js:110-112][92]
 
 Convert a 32-byte seed to a secret identity key.
 
 #### Parameters
 
--   `seed` **([string][55] \| [Buffer][66])** 32-byte seed.
+-   `seed` **([string][62] \| [Buffer][73])** 32-byte seed.
 
-Returns **[string][55]** Secret identity key.
+Returns **[string][62]** Secret identity key.
 
 [1]: #server
 
@@ -451,112 +503,134 @@ Returns **[string][55]** Secret identity key.
 
 [26]: #parameters-10
 
-[27]: #getactivepublicidentitykeys
+[27]: #generateidentitykeyfromwalletseed
 
 [28]: #parameters-11
 
-[29]: #getsecretidentitykey
+[29]: #getactivepublicidentitykeys
 
 [30]: #parameters-12
 
-[31]: #isidentitykeyactive
+[31]: #getallidentitykeys
 
-[32]: #parameters-13
+[32]: #getsecretidentitykey
 
-[33]: #replaceidentitykey
+[33]: #parameters-13
 
-[34]: #parameters-14
+[34]: #importidentitykeys
 
-[35]: #extractcryptomaterial
+[35]: #parameters-14
 
-[36]: #parameters-15
+[36]: #isidentitykeyactive
 
-[37]: #generaterandomidentitykeypair
+[37]: #parameters-15
 
-[38]: #getpublicidentitykey
+[38]: #removeidentitykeys
 
 [39]: #parameters-16
 
-[40]: #isvalididentitykey
+[40]: #replaceidentitykey
 
 [41]: #parameters-17
 
-[42]: #isvalidpublicidentitykey
+[42]: #extractcryptomaterial
 
 [43]: #parameters-18
 
-[44]: #isvalidsecretidentitykey
+[44]: #generaterandomidentitykeypair
 
-[45]: #parameters-19
+[45]: #getpublicidentitykey
 
-[46]: #keytopublicidentitykey
+[46]: #parameters-19
 
-[47]: #parameters-20
+[47]: #isvalididentitykey
 
-[48]: #seedtosecretidentitykey
+[48]: #parameters-20
 
-[49]: #parameters-21
+[49]: #isvalidpublicidentitykey
 
-[50]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/index.js#L6-L6 "Source code on GitHub"
+[50]: #parameters-21
 
-[51]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/factom-server-identity-manager.js#L27-L88 "Source code on GitHub"
+[51]: #isvalidsecretidentitykey
 
-[52]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[52]: #parameters-22
 
-[53]: https://factomjs.luciap.ca/#connectionoptions
+[53]: #keytopublicidentitykey
 
-[54]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/factom-server-identity-manager.js#L85-L87 "Source code on GitHub"
+[54]: #parameters-23
 
-[55]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[55]: #seedtosecretidentitykey
 
-[56]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[56]: #parameters-24
 
-[57]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[57]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/index.js#L6-L6 "Source code on GitHub"
 
-[58]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/factom-server-identity-manager.js#L38-L40 "Source code on GitHub"
+[58]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/factom-server-identity-manager.js#L27-L88 "Source code on GitHub"
 
-[59]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[59]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[60]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/factom-server-identity-manager.js#L48-L50 "Source code on GitHub"
+[60]: https://factomjs.luciap.ca/#connectionoptions
 
-[61]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/factom-server-identity-manager.js#L60-L62 "Source code on GitHub"
+[61]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/factom-server-identity-manager.js#L85-L87 "Source code on GitHub"
 
-[62]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/factom-server-identity-manager.js#L72-L74 "Source code on GitHub"
+[62]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[63]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/coinbase-address.js#L95-L107 "Source code on GitHub"
+[63]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[64]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/coinbase-cancel.js#L41-L78 "Source code on GitHub"
+[64]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[65]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/server/efficiency.js#L97-L115 "Source code on GitHub"
+[65]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/factom-server-identity-manager.js#L38-L40 "Source code on GitHub"
 
-[66]: https://nodejs.org/api/buffer.html
+[66]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[67]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/index.js#L5-L5 "Source code on GitHub"
+[67]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/factom-server-identity-manager.js#L48-L50 "Source code on GitHub"
 
-[68]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/factom-identity-manager.js#L28-L103 "Source code on GitHub"
+[68]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/factom-server-identity-manager.js#L60-L62 "Source code on GitHub"
 
-[69]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/factom-identity-manager.js#L83-L85 "Source code on GitHub"
+[69]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/factom-server-identity-manager.js#L72-L74 "Source code on GitHub"
 
-[70]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/factom-identity-manager.js#L51-L53 "Source code on GitHub"
+[70]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/coinbase-address.js#L95-L107 "Source code on GitHub"
 
-[71]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/factom-identity-manager.js#L39-L41 "Source code on GitHub"
+[71]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/coinbase-cancel.js#L41-L78 "Source code on GitHub"
 
-[72]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/factom-identity-manager.js#L64-L66 "Source code on GitHub"
+[72]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/server/efficiency.js#L97-L115 "Source code on GitHub"
 
-[73]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/factom-identity-manager.js#L100-L102 "Source code on GitHub"
+[73]: https://nodejs.org/api/buffer.html
 
-[74]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/key-helpers.js#L69-L74 "Source code on GitHub"
+[74]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/index.js#L5-L5 "Source code on GitHub"
 
-[75]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/key-helpers.js#L130-L137 "Source code on GitHub"
+[75]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L32-L145 "Source code on GitHub"
 
-[76]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/key-helpers.js#L82-L92 "Source code on GitHub"
+[76]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L87-L89 "Source code on GitHub"
 
-[77]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/key-helpers.js#L16-L40 "Source code on GitHub"
+[77]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L142-L144 "Source code on GitHub"
 
-[78]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/key-helpers.js#L48-L50 "Source code on GitHub"
+[78]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L55-L57 "Source code on GitHub"
 
-[79]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/key-helpers.js#L58-L60 "Source code on GitHub"
+[79]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L131-L133 "Source code on GitHub"
 
-[80]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/key-helpers.js#L100-L102 "Source code on GitHub"
+[80]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L43-L45 "Source code on GitHub"
 
-[81]: https://git@github.com/:PaulBernier/factom-identity/blob/afcd809bb266807af8d879b788599313b8b1bc56/src/digital/key-helpers.js#L110-L112 "Source code on GitHub"
+[81]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L114-L116 "Source code on GitHub"
+
+[82]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L68-L70 "Source code on GitHub"
+
+[83]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L122-L124 "Source code on GitHub"
+
+[84]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/factom-identity-manager.js#L104-L106 "Source code on GitHub"
+
+[85]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/key-helpers.js#L69-L74 "Source code on GitHub"
+
+[86]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/key-helpers.js#L130-L137 "Source code on GitHub"
+
+[87]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/key-helpers.js#L82-L92 "Source code on GitHub"
+
+[88]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/key-helpers.js#L16-L40 "Source code on GitHub"
+
+[89]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/key-helpers.js#L48-L50 "Source code on GitHub"
+
+[90]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/key-helpers.js#L58-L60 "Source code on GitHub"
+
+[91]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/key-helpers.js#L100-L102 "Source code on GitHub"
+
+[92]: https://git@github.com/:PaulBernier/factom-identity/blob/7cac90f1e411128c9870888109e4bce3e6039cd3/src/digital/key-helpers.js#L110-L112 "Source code on GitHub"
