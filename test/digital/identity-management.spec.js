@@ -156,6 +156,7 @@ describe('Factom digital identity management', function () {
         const keys = await generateIdentityKeyFromWalletSeed(cli, 3);
         assert.isArray(keys);
         assert.lengthOf(keys, 3);
+        assert.notDeepEqual(keys[0], keys[1]);
         await removeIdentityKeys(cli, keys.map(k => k.public));
     });
 

@@ -142,12 +142,12 @@ async function generateIdentityKeyFromWalletSeed(cli, number) {
         throw new Error(`Invalid number of identity keys to generate: ${nb}`);
     }
 
-    const promises = [];
+    const keys = [];
     for (let i = 0; i < nb; ++i) {
-        promises.push(cli.walletdApi('generate-identity-key'));
+        keys.push(await cli.walletdApi('generate-identity-key'));
     }
 
-    return Promise.all(promises);
+    return keys;
 }
 
 module.exports = {
