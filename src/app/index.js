@@ -1,6 +1,6 @@
 /**
- * Module containing functions about Factom digital identities.
- * @module digital
+ * Module containing functions about Factom identities for applications.
+ * @module app
  */
 const { FactomIdentityManager } = require('./factom-identity-manager');
 

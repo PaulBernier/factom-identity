@@ -1,6 +1,6 @@
 # factom-identity-lib.js
 
-Library to read and update Factom identities. Supports both Factom digital identities and server identities.
+Library to read and update Factom identities. Supports both Factom identities for applications and authority set servers.
 
 ## Installation
 

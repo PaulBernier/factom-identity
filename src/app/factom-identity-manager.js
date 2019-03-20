@@ -11,7 +11,7 @@ const { getSecretIdentityKey,
 
 /**
  * Main class to read and write Factom identities.
- * @memberof digital
+ * @memberof app
  * @param {Object} [opts] - Options of connection to factomd and factom-walletd.
  * @param {Object} [opts.factomd] - Options of connection to factomd. See {@link https://factomjs.luciap.ca/#connectionoptions}.
  * @param {Object} [opts.walletd] - Options of connection to factom-walletd. See {@link https://factomjs.luciap.ca/#connectionoptions}.

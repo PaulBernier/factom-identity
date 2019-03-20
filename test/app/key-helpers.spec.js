@@ -6,9 +6,9 @@ const assert = require('chai').assert,
         extractCryptoMaterial,
         keyToPublicIdentityKey,
         seedToSecretIdentityKey,
-        generateRandomIdentityKeyPair } = require('../../src/digital/key-helpers');
+        generateRandomIdentityKeyPair } = require('../../src/app/key-helpers');
 
-describe('Factom digital identity keys', function () {
+describe('Factom identity keys for applications', function () {
 
     it('Should validate identity key', function () {
         assert.isTrue(isValidIdentityKey('idpub2eubg6p18fefnHPW2Z42Wyre8LwqmRbHpkaEfEmJ213cUo8u7w'));

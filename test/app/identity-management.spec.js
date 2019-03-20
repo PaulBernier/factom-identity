@@ -1,6 +1,6 @@
 const assert = require('chai').assert,
     { FactomCli } = require('factom'),
-    { isValidPublicIdentityKey, isValidSecretIdentityKey, generateRandomIdentityKeyPair } = require('../../src/digital/key-helpers'),
+    { isValidPublicIdentityKey, isValidSecretIdentityKey, generateRandomIdentityKeyPair } = require('../../src/app/key-helpers'),
     { getSecretIdentityKey,
         getActivePublicIdentityKeys,
         importIdentityKeys,
@@ -9,12 +9,12 @@ const assert = require('chai').assert,
         createIdentity,
         generateIdentityKeyFromWalletSeed,
         removeIdentityKeys,
-        replaceIdentityKey } = require('../../src/digital/identity-management');
+        replaceIdentityKey } = require('../../src/app/identity-management');
 
 require('dotenv').config();
 const cli = new FactomCli({ host: process.env.FACTOM_HOST });
 
-describe('Factom digital identity management', function () {
+describe('Factom identity management for applications', function () {
 
     const IDENTITY_KEYS_TO_REMOVE = [
         'idpub3Doj5fqXye8PkX8w83hzPh3PXbiLhrxTZjT6sXmtFQdDyzwymz',

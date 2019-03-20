@@ -1,7 +1,7 @@
 const server = require('./server');
-const digital = require('./digital');
+const app = require('./app');
 
 module.exports = {
     server,
-    digital
+    app
 };

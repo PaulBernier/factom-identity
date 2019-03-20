@@ -3,8 +3,8 @@ const factomIdentity = require('../src');
 
 describe('Factom identity exports', function () {
 
-    it('Should export digital module', function () {
-        assert.isObject(factomIdentity.digital);
+    it('Should export app module', function () {
+        assert.isObject(factomIdentity.app);
     });
 
     it('Should export server module', function () {

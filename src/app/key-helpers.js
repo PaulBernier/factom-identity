@@ -9,7 +9,7 @@ const VALID_ID_PREFIXES = new Set(['idpub', 'idsec']);
 
 /**
  * Check if an identity key is well formed.
- * @memberof digital
+ * @memberof app
  * @param {string} idKey - Public or secret identity key.
  * @returns {boolean} - True if the identity key is valid.
  */
@@ -41,7 +41,7 @@ function isValidIdentityKey(idKey) {
 
 /**
  * Check if a public identity key is well formed.
- * @memberof digital
+ * @memberof app
  * @param {string} pubIdKey - Public identity key.
  * @returns {boolean} - True if the public identity key is valid.
  */
@@ -51,7 +51,7 @@ function isValidPublicIdentityKey(pubIdKey) {
 
 /**
  * Check if a secret identity key is well formed.
- * @memberof digital
+ * @memberof app
  * @param {string} secIdKey - Public identity key.
  * @returns {boolean} - True if the secret identity key is valid.
  */
@@ -62,7 +62,7 @@ function isValidSecretIdentityKey(secIdKey) {
 
 /**
  * Extract the ed25519 cryptographic material encapsulated in the identity key.
- * @memberof digital
+ * @memberof app
  * @param {string} idKey - Public or secret identity key.
  * @returns {Buffer} - Either the ed25519 32-byte public key or the 32-byte secret seed.
  */
@@ -75,7 +75,7 @@ function extractCryptoMaterial(idKey) {
 
 /**
  * Get the public identity key corresponding to the input identity key.
- * @memberof digital
+ * @memberof app
  * @param {string} idKey - Secret (or public) identity key.
  * @returns {string} - Corresponding public identity key.
  */
@@ -93,7 +93,7 @@ function getPublicIdentityKey(idKey) {
 
 /**
  * Convert a 32-byte key to a public identity key.
- * @memberof digital
+ * @memberof app
  * @param {string | Buffer} key - 32-byte key.
  * @returns {string} - Public identity key.
  */
@@ -103,7 +103,7 @@ function keyToPublicIdentityKey(key) {
 
 /**
  * Convert a 32-byte seed to a secret identity key.
- * @memberof digital
+ * @memberof app
  * @param {string | Buffer} seed - 32-byte seed.
  * @returns {string} - Secret identity key.
  */
@@ -124,7 +124,7 @@ function keyToIdentityKey(key, prefix) {
 
 /**
  * Generate a random identity key pair.
- * @memberof digital
+ * @memberof app
  * @returns {{public: string, secret: string}} - Random identity key pair.
  */
 function generateRandomIdentityKeyPair() {
