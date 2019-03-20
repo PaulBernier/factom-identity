@@ -1,4 +1,4 @@
-const { Entry, isValidFctPublicAddress, isValidEcAddress, addressToRcdHash, rcdHashToPublicFctAddress } = require('factom');
+const { Entry, isValidPublicFctAddress, isValidEcAddress, addressToRcdHash, rcdHashToPublicFctAddress } = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
 const { getNowTimestamp8BytesBuffer } = require('./common');
 const { verify, extractSecretFromIdentityKey, sign } = require('./common');
@@ -60,7 +60,7 @@ async function update(cli, rootChainId, fctAddress, sk1, ecAddress) {
     if (!isValidSk1(sk1)) {
         throw new Error('Lowest level identity key (sk1) is not valid');
     }
-    if (!isValidFctPublicAddress(fctAddress)) {
+    if (!isValidPublicFctAddress(fctAddress)) {
         throw new Error(`Invalid public FCT address: ${fctAddress}`);
     }
     if (!isValidEcAddress(ecAddress)) {
@@ -99,7 +99,7 @@ function generateUpdateEntry(rootChainId, fctAddress, sk1) {
     if (!isValidSk1(sk1)) {
         throw new Error('Lowest level identity key (sk1) is not valid');
     }
-    if (!isValidFctPublicAddress(fctAddress)) {
+    if (!isValidPublicFctAddress(fctAddress)) {
         throw new Error(`Invalid public FCT address: ${fctAddress}`);
     }
 

@@ -8,7 +8,7 @@ function generateIdentityChain(name, publicKeys) {
     }
 
     const extIds = [Buffer.from('IdentityChain', 'utf8')].concat(name.map(n => Buffer.from(n, 'utf8')));
-    const content = JSON.stringify(Object.assign({ 'identity-version': 1 }, { keys: publicKeys }));
+    const content = JSON.stringify(Object.assign({ 'version': 1 }, { keys: publicKeys }));
 
     const entry = Entry.builder()
         .extIds(extIds)
@@ -22,7 +22,7 @@ function generateIdentityKeyReplacementEntry(chainId, oldPublicIdKey, newPublicI
 
     const seed = extractCryptoMaterial(signingIdKey.secret);
     const key = sign.keyPair.fromSeed(seed);
-    const signature = Buffer.from(sign.detached(Buffer.from(oldPublicIdKey + newPublicIdKey), key.secretKey));
+    const signature = Buffer.from(sign.detached(Buffer.from(chainId + oldPublicIdKey + newPublicIdKey), key.secretKey));
 
     return Entry.builder()
         .chainId(chainId)

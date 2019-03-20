@@ -133,7 +133,7 @@ async function removeIdentityKeys(cli, idKeys) {
 
 async function getAllIdentityKeys(cli) {
     const { keys } = await cli.walletdApi('all-identity-keys');
-    return keys;
+    return keys ? keys : [];
 }
 
 async function generateIdentityKeyFromWalletSeed(cli, number) {

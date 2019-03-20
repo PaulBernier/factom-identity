@@ -563,15 +563,15 @@ Returns **[string][62]** Secret identity key.
 
 [56]: #parameters-24
 
-[57]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/index.js#L6-L6 "Source code on GitHub"
+[57]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/index.js#L6-L6 "Source code on GitHub"
 
-[58]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/factom-server-identity-manager.js#L27-L88 "Source code on GitHub"
+[58]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/factom-server-identity-manager.js#L27-L88 "Source code on GitHub"
 
 [59]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
 [60]: https://factomjs.luciap.ca/#connectionoptions
 
-[61]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/factom-server-identity-manager.js#L85-L87 "Source code on GitHub"
+[61]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/factom-server-identity-manager.js#L85-L87 "Source code on GitHub"
 
 [62]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
@@ -579,58 +579,58 @@ Returns **[string][62]** Secret identity key.
 
 [64]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[65]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/factom-server-identity-manager.js#L38-L40 "Source code on GitHub"
+[65]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/factom-server-identity-manager.js#L38-L40 "Source code on GitHub"
 
 [66]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[67]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/factom-server-identity-manager.js#L48-L50 "Source code on GitHub"
+[67]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/factom-server-identity-manager.js#L48-L50 "Source code on GitHub"
 
-[68]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/factom-server-identity-manager.js#L60-L62 "Source code on GitHub"
+[68]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/factom-server-identity-manager.js#L60-L62 "Source code on GitHub"
 
-[69]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/factom-server-identity-manager.js#L72-L74 "Source code on GitHub"
+[69]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/factom-server-identity-manager.js#L72-L74 "Source code on GitHub"
 
-[70]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/coinbase-address.js#L95-L107 "Source code on GitHub"
+[70]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/coinbase-address.js#L95-L107 "Source code on GitHub"
 
-[71]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/coinbase-cancel.js#L41-L78 "Source code on GitHub"
+[71]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/coinbase-cancel.js#L41-L78 "Source code on GitHub"
 
-[72]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/server/efficiency.js#L97-L115 "Source code on GitHub"
+[72]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/server/efficiency.js#L97-L115 "Source code on GitHub"
 
 [73]: https://nodejs.org/api/buffer.html
 
-[74]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/index.js#L5-L5 "Source code on GitHub"
+[74]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/index.js#L5-L5 "Source code on GitHub"
 
-[75]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L32-L145 "Source code on GitHub"
+[75]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L32-L145 "Source code on GitHub"
 
-[76]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L87-L89 "Source code on GitHub"
+[76]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L87-L89 "Source code on GitHub"
 
-[77]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L142-L144 "Source code on GitHub"
+[77]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L142-L144 "Source code on GitHub"
 
-[78]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L55-L57 "Source code on GitHub"
+[78]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L55-L57 "Source code on GitHub"
 
-[79]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L131-L133 "Source code on GitHub"
+[79]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L131-L133 "Source code on GitHub"
 
-[80]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L43-L45 "Source code on GitHub"
+[80]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L43-L45 "Source code on GitHub"
 
-[81]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L114-L116 "Source code on GitHub"
+[81]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L114-L116 "Source code on GitHub"
 
-[82]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L68-L70 "Source code on GitHub"
+[82]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L68-L70 "Source code on GitHub"
 
-[83]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L122-L124 "Source code on GitHub"
+[83]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L122-L124 "Source code on GitHub"
 
-[84]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/factom-identity-manager.js#L104-L106 "Source code on GitHub"
+[84]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/factom-identity-manager.js#L104-L106 "Source code on GitHub"
 
-[85]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/key-helpers.js#L69-L74 "Source code on GitHub"
+[85]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/key-helpers.js#L69-L74 "Source code on GitHub"
 
-[86]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/key-helpers.js#L130-L137 "Source code on GitHub"
+[86]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/key-helpers.js#L130-L137 "Source code on GitHub"
 
-[87]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/key-helpers.js#L82-L92 "Source code on GitHub"
+[87]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/key-helpers.js#L82-L92 "Source code on GitHub"
 
-[88]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/key-helpers.js#L16-L40 "Source code on GitHub"
+[88]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/key-helpers.js#L16-L40 "Source code on GitHub"
 
-[89]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/key-helpers.js#L48-L50 "Source code on GitHub"
+[89]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/key-helpers.js#L48-L50 "Source code on GitHub"
 
-[90]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/key-helpers.js#L58-L60 "Source code on GitHub"
+[90]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/key-helpers.js#L58-L60 "Source code on GitHub"
 
-[91]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/key-helpers.js#L100-L102 "Source code on GitHub"
+[91]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/key-helpers.js#L100-L102 "Source code on GitHub"
 
-[92]: https://git@github.com/:PaulBernier/factom-identity/blob/cadced04485152dd6a09b58cb6c76e08e2e86beb/src/digital/key-helpers.js#L110-L112 "Source code on GitHub"
+[92]: https://git@github.com/:PaulBernier/factom-identity/blob/ffe015145caae39568cd625e9856eb8b227d7cab/src/digital/key-helpers.js#L110-L112 "Source code on GitHub"

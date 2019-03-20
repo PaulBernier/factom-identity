@@ -114,7 +114,7 @@ function seedToSecretIdentityKey(seed) {
 function keyToIdentityKey(key, prefix) {
     const keyBuffer = Buffer.from(key, 'hex');
     if (keyBuffer.length !== 32) {
-        throw new Error(`Key ${keyBuffer} is not 32 bytes long.`);
+        throw new Error('Key/seed must be 32 bytes long.');
     }
 
     const address = Buffer.concat([prefix, keyBuffer]);
@@ -125,7 +125,7 @@ function keyToIdentityKey(key, prefix) {
 /**
  * Generate a random identity key pair.
  * @memberof digital
- * @returns {public: string, secret: string} - Random identity key pair.
+ * @returns {{public: string, secret: string}} - Random identity key pair.
  */
 function generateRandomIdentityKeyPair() {
     const seed = nacl.randomBytes(32);
