@@ -1,25 +1,16 @@
 const { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('./identity-struct'),
     { isValidIdentityKey, isValidSecretIdentityKey, getPublicIdentityKey, generateRandomIdentityKeyPair } = require('./key-helpers');
+const { getActiveKeysAtHeight } = require('./active-keys-compute');
 
-async function getSecretIdentityKey(cli, idKey) {
-    if (!isValidIdentityKey(idKey)) {
-        throw new Error(`${idKey} is not a valid identity key.`);
-    }
-    if (idKey[2] === 's') {
-        return idKey;
-    } else {
-        const { secret } = await cli.walletdApi('identity-key', { public: idKey });
-        return secret;
-    }
-}
-
+// TODO: implement caching (in memory and file?)
 async function getActivePublicIdentityKeys(cli, identityChainId, blockHeight) {
-    const { keys } = await cli.walletdApi('active-identity-keys', {
-        chainid: identityChainId,
-        height: blockHeight
-    });
+    let height = blockHeight;
+    if (typeof blockHeight !== 'number') {
+        const { directoryBlockHeight } = await cli.getHeights();
+        height = directoryBlockHeight;
+    }
 
-    return keys;
+    return getActiveKeysAtHeight(cli, identityChainId, height);
 }
 
 async function isIdentityKeyActive(cli, identityChainId, idKey, blockHeight) {
@@ -42,6 +33,7 @@ async function createIdentity(cli, name, keys, ecAddress, options) {
     return Object.assign(added, { identityKeys });
 }
 
+// TODO: decouple for walletd
 async function getIdentityKeys(cli, identityKeys, fromWalletSeed) {
     let result = [];
 
@@ -72,6 +64,8 @@ async function getIdentityKeys(cli, identityKeys, fromWalletSeed) {
     return result;
 }
 
+// TODO: decouple from walletd
+
 async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
     const oldPublicIdKey = getPublicIdentityKey(keys.oldIdKey);
     const newPublicIdKey = getPublicIdentityKey(keys.newIdKey);
@@ -93,6 +87,23 @@ async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
 
     return cli.add(entry, ecAddress);
 }
+
+// Walletd identity key store helpers
+// TODO: move out
+
+
+async function getSecretIdentityKey(cli, idKey) {
+    if (!isValidIdentityKey(idKey)) {
+        throw new Error(`${idKey} is not a valid identity key.`);
+    }
+    if (idKey[2] === 's') {
+        return idKey;
+    } else {
+        const { secret } = await cli.walletdApi('identity-key', { public: idKey });
+        return secret;
+    }
+}
+
 
 async function importIdentityKeys(cli, secretIdKeys) {
     let params;
