@@ -21,10 +21,8 @@ async function isIdentityKeyActive(cli, identityChainId, idKey, blockHeight) {
     return keys.includes(publicIdentityKey);
 }
 
-async function createIdentity(cli, name, keys, ecAddress, options) {
-    const opt = options || {};
-
-    const identityKeys = await getIdentityKeys(cli, keys, opt.fromWalletSeed);
+async function createIdentity(cli, name, keys, ecAddress) {
+    const identityKeys = getIdentityKeys(keys);
     const publicKeys = identityKeys.map(idKey => idKey.public);
 
     const idChain = generateIdentityChain(name, publicKeys);
@@ -33,29 +31,19 @@ async function createIdentity(cli, name, keys, ecAddress, options) {
     return Object.assign(added, { identityKeys });
 }
 
-// TODO: decouple for walletd
-async function getIdentityKeys(cli, identityKeys, fromWalletSeed) {
-    let result = [];
+function getIdentityKeys(identityKeys) {
+    const result = [];
 
     if (typeof identityKeys === 'number') {
-        if (fromWalletSeed) {
-            result = await generateIdentityKeyFromWalletSeed(cli, identityKeys);
-        } else {
-            for (let i = 0; i < identityKeys; ++i) {
-                result.push(generateRandomIdentityKeyPair());
-            }
+        for (let i = 0; i < identityKeys; ++i) {
+            result.push(generateRandomIdentityKeyPair());
         }
     } else if (Array.isArray(identityKeys)) {
         for (const idKey of identityKeys) {
             if (!isValidIdentityKey(idKey)) {
                 throw new Error(`${idKey} is not a valid identity key.`);
             }
-            if (idKey[2] === 's') {
-                result.push({ public: getPublicIdentityKey(idKey), secret: idKey });
-            } else {
-                const { secret } = await cli.walletdApi('identity-key', { public: idKey });
-                result.push({ public: idKey, secret });
-            }
+            result.push({ public: getPublicIdentityKey(idKey) });
         }
     } else {
         throw new Error(`Invalid \`keys\` argument type: ${typeof identityKeys}`);
@@ -64,12 +52,14 @@ async function getIdentityKeys(cli, identityKeys, fromWalletSeed) {
     return result;
 }
 
-// TODO: decouple from walletd
-
 async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
+    if (!isValidSecretIdentityKey(keys.signingSecretIdKey)) {
+        throw new Error('signingSecretIdKey must be a valid secret identity key');
+    }
+
     const oldPublicIdKey = getPublicIdentityKey(keys.oldIdKey);
     const newPublicIdKey = getPublicIdentityKey(keys.newIdKey);
-    const signingIdKey = { public: getPublicIdentityKey(keys.signingIdKey), secret: await getSecretIdentityKey(cli, keys.signingIdKey) };
+    const signingIdKey = { public: getPublicIdentityKey(keys.signingSecretIdKey), secret: keys.signingSecretIdKey };
 
     const activeKeys = await getActivePublicIdentityKeys(cli, identityChainId);
 
@@ -88,87 +78,9 @@ async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
     return cli.add(entry, ecAddress);
 }
 
-// Walletd identity key store helpers
-// TODO: move out
-
-
-async function getSecretIdentityKey(cli, idKey) {
-    if (!isValidIdentityKey(idKey)) {
-        throw new Error(`${idKey} is not a valid identity key.`);
-    }
-    if (idKey[2] === 's') {
-        return idKey;
-    } else {
-        const { secret } = await cli.walletdApi('identity-key', { public: idKey });
-        return secret;
-    }
-}
-
-
-async function importIdentityKeys(cli, secretIdKeys) {
-    let params;
-    if (Array.isArray(secretIdKeys)) {
-        if (!secretIdKeys.every(k => isValidSecretIdentityKey(k))) {
-            throw new Error('Some argument keys are not valid secret identity keys');
-        }
-        params = secretIdKeys.map(k => ({ secret: k }));
-    } else {
-        if (!isValidSecretIdentityKey(secretIdKeys)) {
-            throw new ('Argument is not a valid secret identity key.');
-        }
-        params = [{ secret: secretIdKeys }];
-    }
-
-    const { keys } = await cli.walletdApi('import-identity-keys', { keys: params });
-    return keys;
-}
-
-async function removeIdentityKeys(cli, idKeys) {
-    let publicIdKeys = [];
-    if (Array.isArray(idKeys)) {
-        if (!idKeys.every(k => isValidIdentityKey(k))) {
-            throw new Error('Some argument identity keys are not valid');
-        }
-        publicIdKeys = idKeys.map(k => getPublicIdentityKey(k));
-    } else {
-        if (!isValidIdentityKey(idKeys)) {
-            throw new Error('Argument is not a valid identity key.');
-        }
-        publicIdKeys = [getPublicIdentityKey(idKeys)];
-    }
-
-    await Promise.all(publicIdKeys.map(key => cli.walletdApi('remove-identity-key', {
-        public: key
-    })));
-}
-
-async function getAllIdentityKeys(cli) {
-    const { keys } = await cli.walletdApi('all-identity-keys');
-    return keys ? keys : [];
-}
-
-async function generateIdentityKeyFromWalletSeed(cli, number) {
-    const nb = number || 1;
-    if (typeof nb !== 'number' || nb < 1) {
-        throw new Error(`Invalid number of identity keys to generate: ${nb}`);
-    }
-
-    const keys = [];
-    for (let i = 0; i < nb; ++i) {
-        keys.push(await cli.walletdApi('generate-identity-key'));
-    }
-
-    return keys;
-}
-
 module.exports = {
-    getAllIdentityKeys,
-    getSecretIdentityKey,
     getActivePublicIdentityKeys,
     isIdentityKeyActive,
     createIdentity,
-    replaceIdentityKey,
-    importIdentityKeys,
-    removeIdentityKeys,
-    generateIdentityKeyFromWalletSeed
+    replaceIdentityKey
 };

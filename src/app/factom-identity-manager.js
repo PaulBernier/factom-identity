@@ -1,12 +1,7 @@
 const { FactomCli } = require('factom');
-const { getSecretIdentityKey,
-    getActivePublicIdentityKeys,
+const { getActivePublicIdentityKeys,
     isIdentityKeyActive,
-    importIdentityKeys,
-    removeIdentityKeys,
     createIdentity,
-    generateIdentityKeyFromWalletSeed,
-    getAllIdentityKeys,
     replaceIdentityKey } = require('./identity-management');
 
 /**
@@ -32,16 +27,6 @@ const { getSecretIdentityKey,
 class FactomIdentityManager {
     constructor(opts) {
         this.cli = new FactomCli(opts);
-    }
-
-    /**
-     * Fetch corresponding identity key from the wallet if necessary.
-     * @async
-     * @param {string} idKey - Identity key.
-     * @returns {string} - Corresponsing secret identity key.
-     */
-    async getSecretIdentityKey(idKey) {
-        return getSecretIdentityKey(this.cli, idKey);
     }
 
     /**
@@ -73,19 +58,15 @@ class FactomIdentityManager {
      * Create a new identity on-chain.
      * @async
      * @param {string[]} name - Array of strings used as the "name" of the identity.
-     * @param {string[] | number} keys - Either an array of identity keys (available in walletd) or a number. 
-     * If a number is provided the library creates new keys (see options argument).
+     * @param {string[] | number} keys - Either an array of public identity keys or a number. 
+     * If a number is provided the library generate new random keys (the secret keys are part of the returned object).
      * @param {string} ecAddress - Entry Credit address paying for the entry. 
-     * If a public EC address is provided the library attempts to retrieve the secret part from walletd.
-     * @param {Object} [options] 
-     * @param {boolean} [options.fromWalletSeed] - Relevant only if parameter keys is a number. 
-     * If true the new keys are generated from walletd (derived from its seed) and the new keys are automatically stored in walletd.
-     * If false the new keys are generated randomly and are *not* automatically stored in walletd, it is user responsability to manage the new keys returned by the function.
-     * @returns {{ identityKeys: {public: string, secret:string}, txId: string, repeatedCommit: boolean, chainId: string, entryHash: string }[]} - 
+     * If a public EC address is provided the library attempts to retrieve the secret part from the configured walletd instance.
+      * @returns {{ identityKeys: {public: string, secret:string}, txId: string, repeatedCommit: boolean, chainId: string, entryHash: string }[]} - 
      * Info about the Chain creation together with the list of identity keys associated with the new identity.
      */
-    async createIdentity(name, keys, ecAddress, options) {
-        return createIdentity(this.cli, name, keys, ecAddress, options);
+    async createIdentity(name, keys, ecAddress) {
+        return createIdentity(this.cli, name, keys, ecAddress);
     }
 
     /**
@@ -95,55 +76,14 @@ class FactomIdentityManager {
      * @param {Object} keys
      * @param {string} keys.oldIdKey - Old public identity key to replace.
      * @param {string} keys.newIdKey - New public identity key to take the place of oldIdKey.
-     * @param {string} keys.signingIdKey - Identity key signing for the replacement. Must be of a higher priority than oldIdKey.
-     * If a public identity key is provided the library attempts to retrieve the secret part from walletd.
+     * @param {string} keys.signingSecretIdKey - Secret identity key signing for the replacement. Must be of same or higher priority than oldIdKey.
      * @param {string} ecAddress - Entry Credit address paying for the entry. 
-     * If a public EC address is provided the library attempts to retrieve the secret part from walletd.
+     * If a public EC address is provided the library attempts to retrieve the secret part from the configured walletd instance.
      * @returns {{ txId: string, repeatedCommit: boolean, chainId: string, entryHash: string }} - Info about the Entry insertion.
      */
     async replaceIdentityKey(identityChainId, keys, ecAddress) {
         return replaceIdentityKey(this.cli, identityChainId, keys, ecAddress);
     }
-
-    /**
-     * Store keys in walletd.
-     * @async
-     * @param {string|string[]} secretIdKeys - A single secret key or an array of secret keys to import.
-     * @returns {{public: string, secret: string}[]}
-     */
-    async importIdentityKeys(secretIdKeys) {
-        return importIdentityKeys(this.cli, secretIdKeys);
-    }
-
-    /**
-     * Remove from walletd some identity keys.
-     * @param {string|string[]} idKeys 
-     */
-    async removeIdentityKeys(idKeys) {
-        return removeIdentityKeys(this.cli, idKeys);
-    }
-
-    /**
-     * Get all identity keys stored in walletd.
-     * @async
-     * @returns {{public: string, secret: string}[]}
-     */
-    async getAllIdentityKeys() {
-        return getAllIdentityKeys(this.cli);
-    }
-
-    /**
-     * Creates a new identity key and adds it to walletd. 
-     * New keys are generated from the same mnemonic seed used for FCT and EC addresses.
-     * @async
-     * @param {number} [number=1] - Number of identity keys to generate.
-     * @returns {{public: string, secret: string}}
-     */
-    async generateIdentityKeyFromWalletSeed(number) {
-        return generateIdentityKeyFromWalletSeed(this.cli, number);
-    }
 }
 
-module.exports = {
-    FactomIdentityManager
-};
+module.exports = FactomIdentityManager;
