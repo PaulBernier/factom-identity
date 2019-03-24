@@ -7,7 +7,7 @@ const manager = new FactomIdentityManager({ host: process.env.FACTOM_HOST });
 
 describe('Factom identity management for applications', function () {
 
-    it('Should get active public identity keys', async function () {
+    xit('Should get active public identity keys', async function () {
         this.timeout(10000);
         const keysAtHeight = await manager.getActivePublicIdentityKeys('e522a08e1697fd58c8d83fc72ceecc1efd8b8f12620e9f186d528f6e66ef6d42', 58499);
         assert.deepEqual(keysAtHeight, ['idpub2kVac9L6ZiS91RrEoEfQrJGpcEoJJcGUyYE8zaq4gDB7VDhSjR', 'idpub2pjBQgLnCcmoMWTZzqBQ2ShSEM4hJZNQZ1MJNtyhgBCrPBD7eo']);
@@ -16,7 +16,7 @@ describe('Factom identity management for applications', function () {
         assert.deepEqual(keys, ['idpub2kVac9L6ZiS91RrEoEfQrJGpcEoJJcGUyYE8zaq4gDB7VDhSjR', 'idpub3Doj5fqXye8PkX8w83hzPh3PXbiLhrxTZjT6sXmtFQdDyzwymz']);
     });
 
-    it('Should check if key is active', async function () {
+    xit('Should check if key is active', async function () {
         this.timeout(10000);
 
         assert.isTrue(await manager.isIdentityKeyActive('e522a08e1697fd58c8d83fc72ceecc1efd8b8f12620e9f186d528f6e66ef6d42', 'idpub2pjBQgLnCcmoMWTZzqBQ2ShSEM4hJZNQZ1MJNtyhgBCrPBD7eo', 58499));

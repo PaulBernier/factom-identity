@@ -6,7 +6,7 @@ const assert = require('chai').assert,
 const walletd = new WalletdCli();
 const store = new FactomWalletdKeyStore();
 
-describe('Factom identity management for applications', function () {
+describe('Factom Walletd key store', function () {
 
     const IDENTITY_KEYS_TO_REMOVE = [
         'idpub3Doj5fqXye8PkX8w83hzPh3PXbiLhrxTZjT6sXmtFQdDyzwymz',
@@ -71,6 +71,8 @@ describe('Factom identity management for applications', function () {
         const keys = await store.generateIdentityKey();
         assert.isArray(keys);
         assert.lengthOf(keys, 1);
+        assert.isTrue(isValidPublicIdentityKey(keys[0].public));
+        assert.isTrue(isValidSecretIdentityKey(keys[0].secret));
         await store.removeIdentityKeys(keys.map(k => k.public));
     });
 
