@@ -1,18 +1,6 @@
 const { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('./identity-struct'),
     { isValidIdentityKey, isValidSecretIdentityKey, getPublicIdentityKey, generateRandomIdentityKeyPair } = require('./key-helpers');
-const { getActiveKeysAtHeight } = require('./active-keys-compute');
-
-async function getActivePublicIdentityKeys(cli, identityChainId, blockHeight) {
-    return getActiveKeysAtHeight(cli, identityChainId, blockHeight);
-}
-
-async function isIdentityKeyActive(cli, identityChainId, idKey, blockHeight) {
-    const publicIdentityKey = getPublicIdentityKey(idKey);
-
-    const keys = await getActivePublicIdentityKeys(cli, identityChainId, blockHeight);
-
-    return keys.includes(publicIdentityKey);
-}
+const { getActiveKeysAtHeight } = require('./get-identity-information');
 
 async function createIdentity(cli, name, keys, ecAddress) {
     const identityKeys = getIdentityKeys(keys);
@@ -54,7 +42,7 @@ async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
     const newPublicIdKey = getPublicIdentityKey(keys.newIdKey);
     const signingIdKey = { public: getPublicIdentityKey(keys.signingSecretIdKey), secret: keys.signingSecretIdKey };
 
-    const activeKeys = await getActivePublicIdentityKeys(cli, identityChainId);
+    const activeKeys = await getActiveKeysAtHeight(cli, identityChainId);
 
     if (!activeKeys.includes(oldPublicIdKey)) {
         throw new Error(`Old identity key ${oldPublicIdKey} is not part of the active keys: [${activeKeys}].`);
@@ -72,8 +60,6 @@ async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
 }
 
 module.exports = {
-    getActivePublicIdentityKeys,
-    isIdentityKeyActive,
     createIdentity,
     replaceIdentityKey
 };

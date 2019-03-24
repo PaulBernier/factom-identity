@@ -4,7 +4,7 @@ const assert = require('chai').assert,
     { FactomCli, Entry } = require('factom'),
     { generateRandomIdentityKeyPair } = require('../../src/app/key-helpers'),
     { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('../../src/app/identity-struct'),
-    { getActiveKeysAtHeight } = require('../../src/app/active-keys-compute');
+    { getActiveKeysAtHeight, getIdentityName } = require('../../src/app/get-identity-information');
 
 
 describe('Compute active keys at block height', function () {
@@ -299,6 +299,38 @@ describe('Compute active keys at block height', function () {
         rotatedKeys[2] = newPublicIdKey;
         rotatedKeys[1] = newPublicIdKey2;
         assert.deepStrictEqual(set, rotatedKeys);
+    });
+
+    it('Should get identity name', async function () {
+        const chainId = randomBytes(32).toString('hex');
+        const name = [randomBytes(4), randomBytes(12), randomBytes(20)];
+        const firstEntry = generateIdentityChain(name, getRandomKeys().map(k => k.public)).firstEntry;
+
+        const cli = new FactomCli();
+        const mock = sinon.mock(cli);
+        mock.expects('getFirstEntry')
+            .once()
+            .withArgs(chainId)
+            .returns(firstEntry);
+
+        const readName = await getIdentityName(cli, chainId);
+        // Calling again should fetch name from the cache and not call getFirstEntry
+        await getIdentityName(cli, chainId);
+
+        assert.deepStrictEqual(readName, name);
+    });
+
+    it('Should cache identity name during call to getActiveKeysAtHeight', async function () {
+        const chainId = randomBytes(32).toString('hex');
+        const initialPublicKeys = getRandomKeys().map(k => k.public);
+        const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
+        const blockContexts = getBlockContexts([[1]]);
+        const cli = getMockedCli(chainId, entries, blockContexts);
+
+        await getActiveKeysAtHeight(cli, chainId, 99999);
+        const readName = await getIdentityName(cli, chainId);
+        
+        assert.deepStrictEqual(readName, [Buffer.from('name', 'utf8')]);
     });
 });
 

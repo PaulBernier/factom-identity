@@ -12,7 +12,8 @@ const INITIAL_KEYS_SCHEMA = Joi.object().keys({
 });
 
 // In memory identity cache
-const IDENTITY_CACHE = {};
+const IDENTITY_KEYS_CACHE = {};
+const IDENTITY_NAME_CACHE = {};
 
 async function getActiveKeysAtHeight(cli, identityChainId, blockHeight = Infinity) {
     const cachedData = getCachedData(identityChainId);
@@ -26,6 +27,7 @@ async function getActiveKeysAtHeight(cli, identityChainId, blockHeight = Infinit
 
         const firstEntry = entries.shift();
         const activeKeys = getInitialKeys(firstEntry);
+        cacheIdentityName(identityChainId, firstEntry);
 
         cachedData.push({
             height: firstEntry.blockContext.directoryBlockHeight,
@@ -63,10 +65,10 @@ function findActiveKeysAtHeight(cachedData, blockHeight) {
 }
 
 function getCachedData(identityChainId) {
-    if (!Array.isArray(IDENTITY_CACHE[identityChainId])) {
-        IDENTITY_CACHE[identityChainId] = [];
+    if (!Array.isArray(IDENTITY_KEYS_CACHE[identityChainId])) {
+        IDENTITY_KEYS_CACHE[identityChainId] = [];
     }
-    return IDENTITY_CACHE[identityChainId];
+    return IDENTITY_KEYS_CACHE[identityChainId];
 }
 
 function applyKeyRotations(chainId, initialActiveKeys, initialAllKeys, entries, cachedData) {
@@ -168,6 +170,24 @@ function basicValidation(e) {
     return firstExtId === 'ReplaceKey' || firstExtId === 'IdentityChain';
 }
 
+async function getIdentityName(cli, identityChainId) {
+    if (IDENTITY_NAME_CACHE[identityChainId]) {
+        return IDENTITY_NAME_CACHE[identityChainId];
+    }
+
+    const firstEntry = await cli.getFirstEntry(identityChainId);
+    // getInitialKeys() is used to validate that this is a valid identity chain first entry
+    getInitialKeys(firstEntry);
+    return cacheIdentityName(identityChainId, firstEntry);
+}
+
+function cacheIdentityName(chainId, entry) {
+    const identityName = entry.extIds.slice(1);
+    IDENTITY_NAME_CACHE[chainId] = identityName;
+    return identityName;
+}
+
 module.exports = {
-    getActiveKeysAtHeight
+    getActiveKeysAtHeight,
+    getIdentityName
 };

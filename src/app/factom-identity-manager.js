@@ -1,8 +1,7 @@
 const { FactomCli } = require('factom');
-const { getActivePublicIdentityKeys,
-    isIdentityKeyActive,
-    createIdentity,
-    replaceIdentityKey } = require('./identity-management');
+const { getPublicIdentityKey } = require('./key-helpers');
+const { getActiveKeysAtHeight, getIdentityName } = require('./get-identity-information');
+const { createIdentity, replaceIdentityKey } = require('./identity-management');
 
 /**
  * Main class to read and write Factom identities.
@@ -38,7 +37,16 @@ class FactomIdentityManager {
      * @returns {string[]} - Array of public identity keys active for the identity.
      */
     async getActivePublicIdentityKeys(identityChainId, blockHeight) {
-        return getActivePublicIdentityKeys(this.cli, identityChainId, blockHeight);
+        return getActiveKeysAtHeight(this.cli, identityChainId, blockHeight);
+    }
+
+    /**
+     * Retrieve the identity "name" that was set at the creation of the identity chain.
+     * @param {string} identityChainId - Identity chain id.
+     * @returns {Buffer[]} - Array of Buffer representing the name of the identity.
+     */
+    async getIdentityName(identityChainId) {
+        return getIdentityName(this.cli, identityChainId);
     }
 
     /**
@@ -51,7 +59,11 @@ class FactomIdentityManager {
      * @returns {boolean} - True if the identity key is active for the identity.
      */
     async isIdentityKeyActive(identityChainId, idKey, blockHeight) {
-        return isIdentityKeyActive(this.cli, identityChainId, idKey, blockHeight);
+        const publicIdentityKey = getPublicIdentityKey(idKey);
+
+        const keys = await getActiveKeysAtHeight(this.cli, identityChainId, blockHeight);
+
+        return keys.includes(publicIdentityKey);
     }
 
     /**
