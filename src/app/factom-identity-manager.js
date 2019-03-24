@@ -11,7 +11,7 @@ const { createIdentity, replaceIdentityKey } = require('./identity-management');
  * @param {Object} [daemonsConfig.walletd] - Configs of connection to factom-walletd. See {@link https://factomjs.luciap.ca/#connectionoptions}.
  * @param {Object} [opts] - Options.
  * @param {Object} [opts.initialCacheData] - Populate cache with some initial data.
- * @param {Object} [opts.save] - Synchronous or asynchronous called to save the state of the cache.
+ * @param {Function} [opts.save] - Synchronous or asynchronous function called to save the state of the cache.
  * @example
  * const manager = new FactomIdentityManager({
  *      factomd: {

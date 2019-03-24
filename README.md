@@ -10,5 +10,5 @@ $ npm install --save factom-identity-lib
 
 ## Documentation
 
-See [docs/doc.md](docs/doc.md)
+See [docs/doc.md](docs/doc.md) or the [html version](https://factom-identity.luciap.ca).
 
