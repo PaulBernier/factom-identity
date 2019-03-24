@@ -14,46 +14,51 @@ const INITIAL_KEYS_SCHEMA = Joi.object().keys({
 // In memory identity cache
 const IDENTITY_CACHE = {};
 
-async function getActiveKeysAtHeight(cli, identityChainId, blockHeight) {
+async function getActiveKeysAtHeight(cli, identityChainId, blockHeight = Infinity) {
     const cachedData = getCachedData(identityChainId);
 
-    if (cachedData.length > 0) {
-        const latestDataAvailable = cachedData[cachedData.length - 1];
-        // If the data is requested for an height lower than what was alreay parsed
-        // it means we only need to search for it in the cached data
-        if (blockHeight <= latestDataAvailable.height) {
-            for (let i = cachedData.length - 1; i >= 0; --i) {
-                if (cachedData[i].height <= blockHeight) {
-                    return cachedData[i].activeKeys;
-                }
-            }
-        } else {
-            // Otherwise fetch just the slice of entries missing
-            const entries = await getEntries(cli, identityChainId, blockHeight, latestDataAvailable.height);
+    if (cachedData.length === 0) {
+        const entries = await getEntries(cli, identityChainId);
 
-            let activeKeys = [...latestDataAvailable.activeKeys];
-            const allKeys = new Set(latestDataAvailable.allKeys);
-
-            return applyKeyRotations(identityChainId, activeKeys, allKeys, entries, cachedData);
-        }
-    } else {
-        const entries = await getEntries(cli, identityChainId, blockHeight);
-        
         if (entries.length === 0) {
-            throw new Error(`Invalid identity chain [${identityChainId}] or the chain didn't exist at height [${blockHeight}]`);
+            throw new Error(`Invalid identity chain [${identityChainId}]`);
         }
 
         const firstEntry = entries.shift();
-        let activeKeys = getInitialKeys(firstEntry);
-        const allKeys = new Set(activeKeys);
+        const activeKeys = getInitialKeys(firstEntry);
 
         cachedData.push({
             height: firstEntry.blockContext.directoryBlockHeight,
             activeKeys: [...activeKeys],
-            allKeys: new Set(allKeys)
+            allKeys: new Set(activeKeys)
         });
 
-        return applyKeyRotations(identityChainId, activeKeys, allKeys, entries, cachedData);
+        applyKeyRotations(identityChainId, activeKeys, activeKeys, entries, cachedData);
+
+    } else {
+        const latestDataCached = cachedData[cachedData.length - 1];
+        // If the data is requested for an height lower than what was alreay parsed
+        // it means we don't need to fetch anything more and just read the result from the cached data
+        // Otherwise fetch the entries down to the latest height that was processed
+        if (blockHeight > latestDataCached.height) {
+            const entries = await getEntries(cli, identityChainId, latestDataCached.height);
+
+            applyKeyRotations(identityChainId, latestDataCached.activeKeys, latestDataCached.allKeys, entries, cachedData);
+        }
+    }
+
+    return findActiveKeysAtHeight(cachedData, blockHeight);
+}
+
+function findActiveKeysAtHeight(cachedData, blockHeight) {
+    if (cachedData[0].height > blockHeight) {
+        throw new Error(`Identity chain didn't exist at height ${blockHeight}`);
+    }
+
+    for (let i = cachedData.length - 1; i >= 0; --i) {
+        if (cachedData[i].height <= blockHeight) {
+            return cachedData[i].activeKeys;
+        }
     }
 }
 
@@ -64,18 +69,16 @@ function getCachedData(identityChainId) {
     return IDENTITY_CACHE[identityChainId];
 }
 
-function applyKeyRotations(chainId, activeKeys, allKeys, entries, cachedData) {
+function applyKeyRotations(chainId, initialActiveKeys, initialAllKeys, entries, cachedData) {
+    let activeKeys = [...initialActiveKeys];
+    const allKeys = new Set(initialAllKeys);
+
     for (let i = 0; i < entries.length; ++i) {
         const entry = entries[i];
 
         if (entry.extIds.length === 5 && entry.extIds[0].toString() === 'ReplaceKey') {
             activeKeys = getUpdatedActiveKeys(chainId, activeKeys, allKeys, entry);
             activeKeys.forEach(k => allKeys.add(k));
-        }
-
-        // Cache data for that block height
-        if (i === entries.length - 1 ||
-            entry.blockContext.directoryBlockHeight !== entries[i + 1].blockContext.directoryBlockHeight) {
 
             cachedData.push({
                 height: entry.blockContext.directoryBlockHeight,
@@ -143,14 +146,16 @@ function getInitialKeys(entry) {
     }
 }
 
-// TODO: upperBoundHeight is more harmful than beneficial when caching is implemented?
-async function getEntries(cli, identityChainId, upperBoundHeight, lowerBoundHeight = -1) {
+async function getEntries(cli, identityChainId, lowerBoundHeight = -1) {
     const entries = [];
-    await cli.rewindChainWhile(identityChainId, (entry) => entry.blockContext.directoryBlockHeight > lowerBoundHeight, function (entry) {
-        if (entry.blockContext.directoryBlockHeight <= upperBoundHeight && basicValidation(entry)) {
-            entries.push(entry);
-        }
-    });
+
+    await cli.rewindChainWhile(identityChainId,
+        (entry) => entry.blockContext.directoryBlockHeight > lowerBoundHeight,
+        function (entry) {
+            if (basicValidation(entry)) {
+                entries.push(entry);
+            }
+        });
 
     return entries.reverse();
 }

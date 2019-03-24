@@ -42,6 +42,27 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(keys, rotatedKeys);
     });
 
+    it('Should return the latest ative keys if no blockheight is specified', async function () {
+        const chainId = randomBytes(32).toString('hex');
+        const initialKeys = getRandomKeys();
+        const initialPublicKeys = initialKeys.map(k => k.public);
+        const newPublicIdKey = getRandomKeys(1)[0].public;
+        const newPublicIdKey2 = getRandomKeys(1)[0].public;
+        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[1], newPublicIdKey, initialKeys[0]);
+        const replacement2 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey2, initialKeys[0]);
+
+        const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement, replacement2]];
+        const blockContexts = getBlockContexts([[1, 5, 15]]);
+        const cli = getMockedCli(chainId, entries, blockContexts);
+
+        const keys = await getActiveKeysAtHeight(cli, chainId);
+
+        const rotatedKeys = [...initialPublicKeys];
+        rotatedKeys[1] = newPublicIdKey;
+        rotatedKeys[2] = newPublicIdKey2;
+        assert.deepStrictEqual(keys, rotatedKeys);
+    });
+
     it('Should ignore garbage entry', async function () {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
@@ -279,31 +300,6 @@ describe('Compute active keys at block height', function () {
         rotatedKeys[1] = newPublicIdKey2;
         assert.deepStrictEqual(set, rotatedKeys);
     });
-
-    // TODO: remove after optimization
-    it('Should get fetch keys missing from cache', async function () {
-        const chainId = randomBytes(32).toString('hex');
-        const initialKeys = getRandomKeys();
-        const initialPublicKeys = initialKeys.map(k => k.public);
-        const newPublicIdKey = getRandomKeys(1)[0].public;
-        const newPublicIdKey2 = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey, initialKeys[0]);
-        const replacement2 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[1], newPublicIdKey2, initialKeys[0]);
-
-        const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement, replacement2], [replacement, replacement2]];
-        const blockContexts = getBlockContexts([[1, 5, 10], [5, 10]]);
-        const cli = getMockedCli(chainId, entries, blockContexts);
-
-        await getActiveKeysAtHeight(cli, chainId, 11);
-        // Now get keys from the cache + fetch the last entry missing (replacement2)
-        const set = await getActiveKeysAtHeight(cli, chainId, 11);
-
-        const rotatedKeys = [...initialPublicKeys];
-        rotatedKeys[2] = newPublicIdKey;
-        rotatedKeys[1] = newPublicIdKey2;
-        assert.deepStrictEqual(set, rotatedKeys);
-    });
-
 });
 
 /********************

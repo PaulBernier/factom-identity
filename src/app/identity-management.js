@@ -2,15 +2,8 @@ const { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('
     { isValidIdentityKey, isValidSecretIdentityKey, getPublicIdentityKey, generateRandomIdentityKeyPair } = require('./key-helpers');
 const { getActiveKeysAtHeight } = require('./active-keys-compute');
 
-// TODO: implement caching (in memory and file?)
 async function getActivePublicIdentityKeys(cli, identityChainId, blockHeight) {
-    let height = blockHeight;
-    if (typeof blockHeight !== 'number') {
-        const { directoryBlockHeight } = await cli.getHeights();
-        height = directoryBlockHeight;
-    }
-
-    return getActiveKeysAtHeight(cli, identityChainId, height);
+    return getActiveKeysAtHeight(cli, identityChainId, blockHeight);
 }
 
 async function isIdentityKeyActive(cli, identityChainId, idKey, blockHeight) {
