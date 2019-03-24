@@ -28,7 +28,7 @@
     "homepage": "https://github.com/PaulBernier/factom-identity#readme",
     "dependencies": {
         "base-58": "0.0.1",
-        "factom": "1.0.1",
+        "factom": "1.0.2",
         "hash.js": "^1.1.7",
         "joi": "^14.3.1",
         "joi-factom": "^1.0.0",
