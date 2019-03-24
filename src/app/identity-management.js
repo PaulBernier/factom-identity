@@ -1,6 +1,6 @@
 const { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('./identity-struct'),
     { isValidIdentityKey, isValidSecretIdentityKey, getPublicIdentityKey, generateRandomIdentityKeyPair } = require('./key-helpers');
-const { getActiveKeysAtHeight } = require('./get-identity-information');
+const { getActiveKeysAtHeight } = require('./identity-information-retriever');
 
 async function createIdentity(cli, name, keys, ecAddress) {
     const identityKeys = getIdentityKeys(keys);

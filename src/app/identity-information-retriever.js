@@ -11,45 +11,87 @@ const INITIAL_KEYS_SCHEMA = Joi.object().keys({
     keys: Joi.array().min(1).unique().items(Joi.factom().identityKey('public')).required(),
 });
 
-// In memory identity cache
-const IDENTITY_KEYS_CACHE = {};
-const IDENTITY_NAME_CACHE = {};
+const CACHE_SCHEMA = Joi.object().keys({
+    keys: Joi.object().required(),
+    names: Joi.object().required(),
+});
 
-async function getActiveKeysAtHeight(cli, identityChainId, blockHeight = Infinity) {
-    const cachedData = getCachedData(identityChainId);
+class IdentityInformationRetriever {
+    constructor(cli, opts = {}) {
+        this.cli = cli;
+        this.save = opts.save || (async () => { });
 
-    if (cachedData.length === 0) {
-        const entries = await getEntries(cli, identityChainId);
-
-        if (entries.length === 0) {
-            throw new Error(`Invalid identity chain [${identityChainId}]`);
-        }
-
-        const firstEntry = entries.shift();
-        const activeKeys = getInitialKeys(firstEntry);
-        cacheIdentityName(identityChainId, firstEntry);
-
-        cachedData.push({
-            height: firstEntry.blockContext.directoryBlockHeight,
-            activeKeys: [...activeKeys],
-            allKeys: new Set(activeKeys)
-        });
-
-        applyKeyRotations(identityChainId, activeKeys, activeKeys, entries, cachedData);
-
-    } else {
-        const latestDataCached = cachedData[cachedData.length - 1];
-        // If the data is requested for an height lower than what was alreay parsed
-        // it means we don't need to fetch anything more and just read the result from the cached data
-        // Otherwise fetch the entries down to the latest height that was processed
-        if (blockHeight > latestDataCached.height) {
-            const entries = await getEntries(cli, identityChainId, latestDataCached.height);
-
-            applyKeyRotations(identityChainId, latestDataCached.activeKeys, latestDataCached.allKeys, entries, cachedData);
+        if (opts.initialCacheData) {
+            Joi.assert(opts.initialCacheData, CACHE_SCHEMA);
+            this.cache = opts.initialCacheData;
+        } else {
+            this.cache = { keys: {}, names: {} };
         }
     }
 
-    return findActiveKeysAtHeight(cachedData, blockHeight);
+    saveCache() {
+        return this.save(this.cache);
+    }
+
+    async getActiveKeysAtHeight(identityChainId, blockHeight = Infinity) {
+        const cachedData = getCachedData.call(this, identityChainId);
+        let saveCache = false;
+
+        if (cachedData.length === 0) {
+            const entries = await getEntries(this.cli, identityChainId);
+
+            if (entries.length === 0) {
+                throw new Error(`Invalid identity chain [${identityChainId}]`);
+            }
+
+            const firstEntry = entries.shift();
+            const activeKeys = getInitialKeys(firstEntry);
+            cacheIdentityName.call(this, identityChainId, firstEntry);
+
+            cachedData.push({
+                height: firstEntry.blockContext.directoryBlockHeight,
+                activeKeys: [...activeKeys],
+                allKeys: [...activeKeys]
+            });
+            saveCache = true;
+
+            applyKeyRotations(identityChainId, activeKeys, activeKeys, entries, cachedData);
+
+        } else {
+            const latestDataCached = cachedData[cachedData.length - 1];
+            // If the data is requested for an height lower than what was alreay parsed
+            // it means we don't need to fetch anything more and just read the result from the cached data
+            // Otherwise fetch the entries down to the latest height that was processed
+            if (blockHeight > latestDataCached.height) {
+                const entries = await getEntries(this.cli, identityChainId, latestDataCached.height);
+
+                if (entries.length > 0) {
+                    applyKeyRotations(identityChainId, latestDataCached.activeKeys, latestDataCached.allKeys, entries, cachedData);
+                    saveCache = true;
+                }
+            }
+        }
+
+        if (saveCache) {
+            await this.saveCache();
+        }
+
+        return findActiveKeysAtHeight(cachedData, blockHeight);
+    }
+
+    async getIdentityName(identityChainId) {
+        if (this.cache.names[identityChainId]) {
+            return this.cache.names[identityChainId].map(n => Buffer.from(n, 'hex'));
+        }
+
+        const firstEntry = await this.cli.getFirstEntry(identityChainId);
+        // getInitialKeys() is used to validate that this is a valid identity chain first entry
+        getInitialKeys(firstEntry);
+        cacheIdentityName.call(this, identityChainId, firstEntry);
+        await this.saveCache();
+
+        return this.cache.names[identityChainId].map(n => Buffer.from(n, 'hex'));
+    }
 }
 
 function findActiveKeysAtHeight(cachedData, blockHeight) {
@@ -65,10 +107,10 @@ function findActiveKeysAtHeight(cachedData, blockHeight) {
 }
 
 function getCachedData(identityChainId) {
-    if (!Array.isArray(IDENTITY_KEYS_CACHE[identityChainId])) {
-        IDENTITY_KEYS_CACHE[identityChainId] = [];
+    if (!Array.isArray(this.cache.keys[identityChainId])) {
+        this.cache.keys[identityChainId] = [];
     }
-    return IDENTITY_KEYS_CACHE[identityChainId];
+    return this.cache.keys[identityChainId];
 }
 
 function applyKeyRotations(chainId, initialActiveKeys, initialAllKeys, entries, cachedData) {
@@ -85,7 +127,7 @@ function applyKeyRotations(chainId, initialActiveKeys, initialAllKeys, entries, 
             cachedData.push({
                 height: entry.blockContext.directoryBlockHeight,
                 activeKeys: [...activeKeys],
-                allKeys: new Set(allKeys)
+                allKeys: [...allKeys]
             });
         }
     }
@@ -170,24 +212,11 @@ function basicValidation(e) {
     return firstExtId === 'ReplaceKey' || firstExtId === 'IdentityChain';
 }
 
-async function getIdentityName(cli, identityChainId) {
-    if (IDENTITY_NAME_CACHE[identityChainId]) {
-        return IDENTITY_NAME_CACHE[identityChainId];
-    }
-
-    const firstEntry = await cli.getFirstEntry(identityChainId);
-    // getInitialKeys() is used to validate that this is a valid identity chain first entry
-    getInitialKeys(firstEntry);
-    return cacheIdentityName(identityChainId, firstEntry);
-}
-
 function cacheIdentityName(chainId, entry) {
-    const identityName = entry.extIds.slice(1);
-    IDENTITY_NAME_CACHE[chainId] = identityName;
-    return identityName;
+    const identityName = entry.extIds.slice(1).map(e => e.toString('hex'));
+    this.cache.names[chainId] = identityName;
 }
 
 module.exports = {
-    getActiveKeysAtHeight,
-    getIdentityName
+    IdentityInformationRetriever
 };

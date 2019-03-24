@@ -1,14 +1,17 @@
 const { FactomCli } = require('factom');
 const { getPublicIdentityKey } = require('./key-helpers');
-const { getActiveKeysAtHeight, getIdentityName } = require('./get-identity-information');
+const { IdentityInformationRetriever } = require('./identity-information-retriever');
 const { createIdentity, replaceIdentityKey } = require('./identity-management');
 
 /**
  * Main class to read and write Factom identities.
  * @memberof app
- * @param {Object} [opts] - Options of connection to factomd and factom-walletd.
- * @param {Object} [opts.factomd] - Options of connection to factomd. See {@link https://factomjs.luciap.ca/#connectionoptions}.
- * @param {Object} [opts.walletd] - Options of connection to factom-walletd. See {@link https://factomjs.luciap.ca/#connectionoptions}.
+ * @param {Object} [daemonsConfig] - Configs of connection to factomd and factom-walletd.
+ * @param {Object} [daemonsConfig.factomd] - Configs of connection to factomd. See {@link https://factomjs.luciap.ca/#connectionoptions}.
+ * @param {Object} [daemonsConfig.walletd] - Configs of connection to factom-walletd. See {@link https://factomjs.luciap.ca/#connectionoptions}.
+ * @param {Object} [opts] - Options.
+ * @param {Object} [opts.initialCacheData] - Populate cache with some initial data.
+ * @param {Object} [opts.save] - Synchronous or asynchronous called to save the state of the cache.
  * @example
  * const manager = new FactomIdentityManager({
  *      factomd: {
@@ -24,8 +27,9 @@ const { createIdentity, replaceIdentityKey } = require('./identity-management');
  * });
  */
 class FactomIdentityManager {
-    constructor(opts) {
-        this.cli = new FactomCli(opts);
+    constructor(daemonsConfig, opts) {
+        this.cli = new FactomCli(daemonsConfig);
+        this.identityRetriever = new IdentityInformationRetriever(this.cli, opts);
     }
 
     /**
@@ -37,7 +41,7 @@ class FactomIdentityManager {
      * @returns {string[]} - Array of public identity keys active for the identity.
      */
     async getActivePublicIdentityKeys(identityChainId, blockHeight) {
-        return getActiveKeysAtHeight(this.cli, identityChainId, blockHeight);
+        return this.identityRetriever.getActiveKeysAtHeight(identityChainId, blockHeight);
     }
 
     /**
@@ -46,7 +50,7 @@ class FactomIdentityManager {
      * @returns {Buffer[]} - Array of Buffer representing the name of the identity.
      */
     async getIdentityName(identityChainId) {
-        return getIdentityName(this.cli, identityChainId);
+        return this.identityRetriever.getIdentityName(identityChainId);
     }
 
     /**
@@ -61,7 +65,7 @@ class FactomIdentityManager {
     async isIdentityKeyActive(identityChainId, idKey, blockHeight) {
         const publicIdentityKey = getPublicIdentityKey(idKey);
 
-        const keys = await getActiveKeysAtHeight(this.cli, identityChainId, blockHeight);
+        const keys = await this.identityRetriever.getActiveKeysAtHeight(identityChainId, blockHeight);
 
         return keys.includes(publicIdentityKey);
     }

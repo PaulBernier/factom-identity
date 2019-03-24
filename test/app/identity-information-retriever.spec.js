@@ -4,7 +4,7 @@ const assert = require('chai').assert,
     { FactomCli, Entry } = require('factom'),
     { generateRandomIdentityKeyPair } = require('../../src/app/key-helpers'),
     { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('../../src/app/identity-struct'),
-    { getActiveKeysAtHeight, getIdentityName } = require('../../src/app/get-identity-information');
+    { IdentityInformationRetriever } = require('../../src/app/identity-information-retriever');
 
 
 describe('Compute active keys at block height', function () {
@@ -16,7 +16,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
@@ -34,7 +35,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const keys = await getActiveKeysAtHeight(cli, chainId, 8);
+        const retriever = new IdentityInformationRetriever(cli);
+        const keys = await retriever.getActiveKeysAtHeight(chainId, 8);
 
         const rotatedKeys = [...initialPublicKeys];
         rotatedKeys[1] = newPublicIdKey;
@@ -55,7 +57,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5, 15]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const keys = await getActiveKeysAtHeight(cli, chainId);
+        const retriever = new IdentityInformationRetriever(cli);
+        const keys = await retriever.getActiveKeysAtHeight(chainId);
 
         const rotatedKeys = [...initialPublicKeys];
         rotatedKeys[1] = newPublicIdKey;
@@ -72,7 +75,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
@@ -85,7 +89,8 @@ describe('Compute active keys at block height', function () {
         const cli = getMockedCli(chainId, entries, blockContexts);
 
         try {
-            await getActiveKeysAtHeight(cli, chainId, 10);
+            const retriever = new IdentityInformationRetriever(cli);
+            await retriever.getActiveKeysAtHeight(chainId, 10);
         } catch (e) {
             return assert.instanceOf(e, Error);
         }
@@ -99,7 +104,8 @@ describe('Compute active keys at block height', function () {
         const cli = getMockedCli(chainId, entries, blockContexts);
 
         try {
-            await getActiveKeysAtHeight(cli, chainId, 99999);
+            const retriever = new IdentityInformationRetriever(cli);
+            await retriever.getActiveKeysAtHeight(chainId, 99999);
         } catch (e) {
             return assert.instanceOf(e, Error);
         }
@@ -116,7 +122,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         const rotatedKeys = [...initialPublicKeys];
         rotatedKeys[2] = newPublicIdKey;
@@ -133,7 +140,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 3);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 3);
 
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
@@ -148,7 +156,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         const rotatedKeys = [...initialPublicKeys];
         rotatedKeys[2] = newPublicIdKey;
@@ -167,7 +176,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5, 12]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         const rotatedKeys = [...initialPublicKeys];
         rotatedKeys[2] = newPublicIdKey;
@@ -187,7 +197,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5, 12]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         const rotatedKeys = [...initialPublicKeys];
         rotatedKeys[2] = newPublicIdKey;
@@ -204,7 +215,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
@@ -218,7 +230,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
@@ -242,7 +255,8 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        const activeKeys = await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 99999);
 
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
@@ -259,13 +273,14 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5, 10]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        await getActiveKeysAtHeight(cli, chainId, 99999);
+        const retriever = new IdentityInformationRetriever(cli);
+        await retriever.getActiveKeysAtHeight(chainId, 99999);
         // Now get keys from the cache
-        const set1 = await getActiveKeysAtHeight(cli, chainId, 1);
-        const set2 = await getActiveKeysAtHeight(cli, chainId, 3);
-        const set3 = await getActiveKeysAtHeight(cli, chainId, 5);
-        const set4 = await getActiveKeysAtHeight(cli, chainId, 7);
-        const set5 = await getActiveKeysAtHeight(cli, chainId, 10);
+        const set1 = await retriever.getActiveKeysAtHeight(chainId, 1);
+        const set2 = await retriever.getActiveKeysAtHeight(chainId, 3);
+        const set3 = await retriever.getActiveKeysAtHeight(chainId, 5);
+        const set4 = await retriever.getActiveKeysAtHeight(chainId, 7);
+        const set5 = await retriever.getActiveKeysAtHeight(chainId, 10);
 
         assert.deepStrictEqual(set1, initialPublicKeys);
         assert.deepStrictEqual(set2, initialPublicKeys);
@@ -291,9 +306,10 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1, 5], [5, 10]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        await getActiveKeysAtHeight(cli, chainId, 8);
+        const retriever = new IdentityInformationRetriever(cli);
+        await retriever.getActiveKeysAtHeight(chainId, 8);
         // Now get keys from the cache + fetch the last entry missing (replacement2)
-        const set = await getActiveKeysAtHeight(cli, chainId, 11);
+        const set = await retriever.getActiveKeysAtHeight(chainId, 11);
 
         const rotatedKeys = [...initialPublicKeys];
         rotatedKeys[2] = newPublicIdKey;
@@ -313,9 +329,10 @@ describe('Compute active keys at block height', function () {
             .withArgs(chainId)
             .returns(firstEntry);
 
-        const readName = await getIdentityName(cli, chainId);
+        const retriever = new IdentityInformationRetriever(cli);
+        const readName = await retriever.getIdentityName(chainId);
         // Calling again should fetch name from the cache and not call getFirstEntry
-        await getIdentityName(cli, chainId);
+        await retriever.getIdentityName(chainId);
 
         assert.deepStrictEqual(readName, name);
     });
@@ -327,10 +344,90 @@ describe('Compute active keys at block height', function () {
         const blockContexts = getBlockContexts([[1]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
-        await getActiveKeysAtHeight(cli, chainId, 99999);
-        const readName = await getIdentityName(cli, chainId);
-        
+        const retriever = new IdentityInformationRetriever(cli);
+        await retriever.getActiveKeysAtHeight(chainId, 99999);
+        const readName = await retriever.getIdentityName(chainId);
+
         assert.deepStrictEqual(readName, [Buffer.from('name', 'utf8')]);
+    });
+
+    it('Should initialize the cache', async function () {
+        const chainId = randomBytes(32).toString('hex');
+        const publicKeys = getRandomKeys().map(k => k.public);
+        const cache = { keys: {}, names: {} };
+        cache.keys[chainId] = [{
+            height: 8,
+            activeKeys: publicKeys,
+            allKeys: publicKeys
+        }];
+        cache.names[chainId] = [Buffer.from('from'), Buffer.from('cache')];
+
+        const retriever = new IdentityInformationRetriever(undefined, { initialCacheData: cache });
+        const activeKeys = await retriever.getActiveKeysAtHeight(chainId, 8);
+        const readName = await retriever.getIdentityName(chainId);
+
+        assert.deepStrictEqual(activeKeys, publicKeys);
+        assert.deepStrictEqual(readName, [Buffer.from('from'), Buffer.from('cache')]);
+    });
+
+    it('Should not save the cache if no new key rotation happened', async function () {
+        const chainId = randomBytes(32).toString('hex');
+        const initialPublicKeys = getRandomKeys().map(k => k.public);
+        const entries = [[getIdentityFirstEntry(initialPublicKeys)], [getIdentityFirstEntry(initialPublicKeys)]];
+        const blockContexts = getBlockContexts([[11], [11]]);
+        const cli = getMockedCli(chainId, entries, blockContexts);
+        const save = sinon.spy();
+
+        const retriever = new IdentityInformationRetriever(cli, { save });
+        await retriever.getActiveKeysAtHeight(chainId);
+        await retriever.getActiveKeysAtHeight(chainId);
+
+        assert.isTrue(save.calledOnce);
+    });
+
+    it('Should save the cache', async function () {
+        const chainId = randomBytes(32).toString('hex');
+        const initialPublicKeys = getRandomKeys().map(k => k.public);
+        const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
+        const blockContexts = getBlockContexts([[11]]);
+        const cli = getMockedCli(chainId, entries, blockContexts);
+        const save = sinon.spy();
+
+        const retriever = new IdentityInformationRetriever(cli, { save });
+        await retriever.getActiveKeysAtHeight(chainId, 99999);
+
+        assert.isTrue(save.calledOnce);
+        const expectedCacheValue = { keys: {}, names: {} };
+        expectedCacheValue.keys[chainId] = [{
+            height: 11,
+            activeKeys: initialPublicKeys,
+            allKeys: initialPublicKeys
+        }];
+        expectedCacheValue.names[chainId] = [Buffer.from('name').toString('hex')];
+
+        assert.deepStrictEqual(save.firstCall.args[0], expectedCacheValue);
+    });
+
+    it('Should use saved data as cache initialization', async function () {
+        const chainId = randomBytes(32).toString('hex');
+        const initialPublicKeys = getRandomKeys().map(k => k.public);
+        const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
+        const blockContexts = getBlockContexts([[11]]);
+        const cli = getMockedCli(chainId, entries, blockContexts);
+        const save = sinon.spy();
+
+        const retriever = new IdentityInformationRetriever(cli, { save });
+        await retriever.getActiveKeysAtHeight(chainId, 99999);
+
+        const persisted = save.firstCall.args[0];
+
+        const save2 = sinon.spy();
+        const retriever2 = new IdentityInformationRetriever(undefined, { save2, initialCacheData: persisted });
+        const activeKeys = await retriever2.getActiveKeysAtHeight(chainId, 11);
+        const name = await retriever2.getIdentityName(chainId);
+        assert.isTrue(save2.notCalled);
+        assert.deepStrictEqual(activeKeys, initialPublicKeys);
+        assert.deepStrictEqual(name, [Buffer.from('name')]);
     });
 });
 
