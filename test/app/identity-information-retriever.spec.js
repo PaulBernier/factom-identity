@@ -3,13 +3,14 @@ const assert = require('chai').assert,
     { randomBytes } = require('crypto'),
     { FactomCli, Entry } = require('factom'),
     { generateRandomIdentityKeyPair } = require('../../src/app/key-helpers'),
-    { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('../../src/app/identity-struct'),
+    {
+        generateIdentityChain,
+        generateIdentityKeyReplacementEntry
+    } = require('../../src/app/identity-struct'),
     { IdentityInformationRetriever } = require('../../src/app/identity-information-retriever');
 
-
-describe('Compute active keys at block height', function () {
-
-    it('Should get initial set of keys', async function () {
+describe('Compute active keys at block height', function() {
+    it('Should get initial set of keys', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialPublicKeys = getRandomKeys().map(k => k.public);
         const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
@@ -22,14 +23,24 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
 
-    it('Should handle 2 key rotations in the same block', async function () {
+    it('Should handle 2 key rotations in the same block', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
         const newPublicIdKey2 = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[1], newPublicIdKey, initialKeys[0]);
-        const replacement2 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey2, initialKeys[0]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[1],
+            newPublicIdKey,
+            initialKeys[0]
+        );
+        const replacement2 = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey2,
+            initialKeys[0]
+        );
 
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement, replacement2]];
         const blockContexts = getBlockContexts([[1, 5, 5]]);
@@ -44,14 +55,24 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(keys, rotatedKeys);
     });
 
-    it('Should return the latest ative keys if no blockheight is specified', async function () {
+    it('Should return the latest ative keys if no blockheight is specified', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
         const newPublicIdKey2 = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[1], newPublicIdKey, initialKeys[0]);
-        const replacement2 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey2, initialKeys[0]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[1],
+            newPublicIdKey,
+            initialKeys[0]
+        );
+        const replacement2 = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey2,
+            initialKeys[0]
+        );
 
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement, replacement2]];
         const blockContexts = getBlockContexts([[1, 5, 15]]);
@@ -66,11 +87,13 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(keys, rotatedKeys);
     });
 
-    it('Should ignore garbage entry', async function () {
+    it('Should ignore garbage entry', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
-        const garbage = Entry.builder().extId('ReplaceKey', 'utf8').build();
+        const garbage = Entry.builder()
+            .extId('ReplaceKey', 'utf8')
+            .build();
         const entries = [[getIdentityFirstEntry(initialPublicKeys), garbage]];
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -81,7 +104,7 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
 
-    it('Should throw if chain did not exist at height', async function () {
+    it('Should throw if chain did not exist at height', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialPublicKeys = getRandomKeys().map(k => k.public);
         const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
@@ -97,9 +120,15 @@ describe('Compute active keys at block height', function () {
         throw new Error('Should have thrown');
     });
 
-    it('Should throw if chain is not an identity chain', async function () {
+    it('Should throw if chain is not an identity chain', async function() {
         const chainId = randomBytes(32).toString('hex');
-        const entries = [[Entry.builder().content('random entry', 'utf8').build()]];
+        const entries = [
+            [
+                Entry.builder()
+                    .content('random entry', 'utf8')
+                    .build()
+            ]
+        ];
         const blockContexts = getBlockContexts([[[1]]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
@@ -112,12 +141,17 @@ describe('Compute active keys at block height', function () {
         throw new Error('Should have thrown');
     });
 
-    it('Should get keys after key rotation', async function () {
+    it('Should get keys after key rotation', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey, initialKeys[1]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey,
+            initialKeys[1]
+        );
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement]];
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -130,12 +164,17 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, rotatedKeys);
     });
 
-    it('Should get keys before key rotation', async function () {
+    it('Should get keys before key rotation', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey, initialKeys[1]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey,
+            initialKeys[1]
+        );
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement]];
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -146,12 +185,17 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
 
-    it('Should accept key rotation with the same priority', async function () {
+    it('Should accept key rotation with the same priority', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey, initialKeys[2]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey,
+            initialKeys[2]
+        );
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement]];
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -164,14 +208,24 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, rotatedKeys);
     });
 
-    it('Should not take into account reuse of an existing key', async function () {
+    it('Should not take into account reuse of an existing key', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
-        const replacement1 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey, initialKeys[0]);
+        const replacement1 = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey,
+            initialKeys[0]
+        );
         // Second rotation attempt to restore initialPublicKeys[2] in the active set, which is not allowed
-        const replacement2 = generateIdentityKeyReplacementEntry(chainId, newPublicIdKey, initialPublicKeys[2], initialKeys[0]);
+        const replacement2 = generateIdentityKeyReplacementEntry(
+            chainId,
+            newPublicIdKey,
+            initialPublicKeys[2],
+            initialKeys[0]
+        );
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement1, replacement2]];
         const blockContexts = getBlockContexts([[1, 5, 12]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -184,15 +238,25 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, rotatedKeys);
     });
 
-    it('Should fail to rotate non active key', async function () {
+    it('Should fail to rotate non active key', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
         const newPublicIdKey2 = getRandomKeys(1)[0].public;
-        const replacement1 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey, initialKeys[0]);
+        const replacement1 = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey,
+            initialKeys[0]
+        );
         // Second rotation attempt to rotate initialPublicKeys[2] key which is not in the active set anymore
-        const replacement2 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey2, initialKeys[0]);
+        const replacement2 = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey2,
+            initialKeys[0]
+        );
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement1, replacement2]];
         const blockContexts = getBlockContexts([[1, 5, 12]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -205,12 +269,17 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, rotatedKeys);
     });
 
-    it('Should not take into account key rotation by a lower priority key', async function () {
+    it('Should not take into account key rotation by a lower priority key', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[1], newPublicIdKey, initialKeys[2]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[1],
+            newPublicIdKey,
+            initialKeys[2]
+        );
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement]];
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -221,11 +290,16 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
 
-    it('Should not take into account key rotation with a non valid key', async function () {
+    it('Should not take into account key rotation with a non valid key', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[1], 'not an actual key', initialKeys[0]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[1],
+            'not an actual key',
+            initialKeys[0]
+        );
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement]];
         const blockContexts = getBlockContexts([[1, 5]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -236,7 +310,7 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
 
-    it('Should not take into account key rotation with invalid signature', async function () {
+    it('Should not take into account key rotation with invalid signature', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
@@ -261,14 +335,24 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
 
-    it('Should get cached keys', async function () {
+    it('Should get cached keys', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
         const newPublicIdKey2 = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey, initialKeys[0]);
-        const replacement2 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[1], newPublicIdKey2, initialKeys[0]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey,
+            initialKeys[0]
+        );
+        const replacement2 = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[1],
+            newPublicIdKey2,
+            initialKeys[0]
+        );
         const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement, replacement2]];
         const blockContexts = getBlockContexts([[1, 5, 10]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
@@ -293,16 +377,29 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(set5, rotatedKeys2);
     });
 
-    it('Should get fetch keys missing from cache', async function () {
+    it('Should get fetch keys missing from cache', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
         const initialPublicKeys = initialKeys.map(k => k.public);
         const newPublicIdKey = getRandomKeys(1)[0].public;
         const newPublicIdKey2 = getRandomKeys(1)[0].public;
-        const replacement = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[2], newPublicIdKey, initialKeys[0]);
-        const replacement2 = generateIdentityKeyReplacementEntry(chainId, initialPublicKeys[1], newPublicIdKey2, initialKeys[0]);
+        const replacement = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[2],
+            newPublicIdKey,
+            initialKeys[0]
+        );
+        const replacement2 = generateIdentityKeyReplacementEntry(
+            chainId,
+            initialPublicKeys[1],
+            newPublicIdKey2,
+            initialKeys[0]
+        );
 
-        const entries = [[getIdentityFirstEntry(initialPublicKeys), replacement], [replacement, replacement2]];
+        const entries = [
+            [getIdentityFirstEntry(initialPublicKeys), replacement],
+            [replacement, replacement2]
+        ];
         const blockContexts = getBlockContexts([[1, 5], [5, 10]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
@@ -317,10 +414,11 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(set, rotatedKeys);
     });
 
-    it('Should get identity name', async function () {
+    it('Should get identity name', async function() {
         const chainId = randomBytes(32).toString('hex');
         const name = [randomBytes(4), randomBytes(12), randomBytes(20)];
-        const firstEntry = generateIdentityChain(name, getRandomKeys().map(k => k.public)).firstEntry;
+        const firstEntry = generateIdentityChain(name, getRandomKeys().map(k => k.public))
+            .firstEntry;
 
         const cli = new FactomCli();
         const mock = sinon.mock(cli);
@@ -337,7 +435,7 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(readName, name);
     });
 
-    it('Should cache identity name during call to getActiveKeysAtHeight', async function () {
+    it('Should cache identity name during call to getActiveKeysAtHeight', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialPublicKeys = getRandomKeys().map(k => k.public);
         const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
@@ -351,15 +449,17 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(readName, [Buffer.from('name', 'utf8')]);
     });
 
-    it('Should initialize the cache', async function () {
+    it('Should initialize the cache', async function() {
         const chainId = randomBytes(32).toString('hex');
         const publicKeys = getRandomKeys().map(k => k.public);
         const cache = { keys: {}, names: {} };
-        cache.keys[chainId] = [{
-            height: 8,
-            activeKeys: publicKeys,
-            allKeys: publicKeys
-        }];
+        cache.keys[chainId] = [
+            {
+                height: 8,
+                activeKeys: publicKeys,
+                allKeys: publicKeys
+            }
+        ];
         cache.names[chainId] = [Buffer.from('from'), Buffer.from('cache')];
 
         const retriever = new IdentityInformationRetriever(undefined, { initialCacheData: cache });
@@ -370,10 +470,13 @@ describe('Compute active keys at block height', function () {
         assert.deepStrictEqual(readName, [Buffer.from('from'), Buffer.from('cache')]);
     });
 
-    it('Should not save the cache if no new key rotation happened', async function () {
+    it('Should not save the cache if no new key rotation happened', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialPublicKeys = getRandomKeys().map(k => k.public);
-        const entries = [[getIdentityFirstEntry(initialPublicKeys)], [getIdentityFirstEntry(initialPublicKeys)]];
+        const entries = [
+            [getIdentityFirstEntry(initialPublicKeys)],
+            [getIdentityFirstEntry(initialPublicKeys)]
+        ];
         const blockContexts = getBlockContexts([[11], [11]]);
         const cli = getMockedCli(chainId, entries, blockContexts);
         const save = sinon.spy();
@@ -385,7 +488,7 @@ describe('Compute active keys at block height', function () {
         assert.isTrue(save.calledOnce);
     });
 
-    it('Should save the cache', async function () {
+    it('Should save the cache', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialPublicKeys = getRandomKeys().map(k => k.public);
         const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
@@ -398,17 +501,19 @@ describe('Compute active keys at block height', function () {
 
         assert.isTrue(save.calledOnce);
         const expectedCacheValue = { keys: {}, names: {} };
-        expectedCacheValue.keys[chainId] = [{
-            height: 11,
-            activeKeys: initialPublicKeys,
-            allKeys: initialPublicKeys
-        }];
+        expectedCacheValue.keys[chainId] = [
+            {
+                height: 11,
+                activeKeys: initialPublicKeys,
+                allKeys: initialPublicKeys
+            }
+        ];
         expectedCacheValue.names[chainId] = [Buffer.from('name').toString('hex')];
 
         assert.deepStrictEqual(save.firstCall.args[0], expectedCacheValue);
     });
 
-    it('Should use saved data as cache initialization', async function () {
+    it('Should use saved data as cache initialization', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialPublicKeys = getRandomKeys().map(k => k.public);
         const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
@@ -422,7 +527,10 @@ describe('Compute active keys at block height', function () {
         const persisted = save.firstCall.args[0];
 
         const save2 = sinon.spy();
-        const retriever2 = new IdentityInformationRetriever(undefined, { save2, initialCacheData: persisted });
+        const retriever2 = new IdentityInformationRetriever(undefined, {
+            save2,
+            initialCacheData: persisted
+        });
         const activeKeys = await retriever2.getActiveKeysAtHeight(chainId, 11);
         const name = await retriever2.getIdentityName(chainId);
         assert.isTrue(save2.notCalled);
@@ -440,7 +548,9 @@ function getBlockContexts(heights) {
 }
 
 function getRandomKeys(n = 3) {
-    return Array(n).fill('').map(() => generateRandomIdentityKeyPair());
+    return Array(n)
+        .fill('')
+        .map(() => generateRandomIdentityKeyPair());
 }
 
 function getIdentityFirstEntry(publicKeys) {
@@ -454,20 +564,28 @@ function getMockedCli(chainId, entries, blockContexts) {
     const cli = new FactomCli();
     const mock = sinon.mock(cli);
 
-    const stub = mock.expects('rewindChainWhile')
+    const stub = mock
+        .expects('rewindChainWhile')
         .exactly(entries.length)
         .withArgs(chainId);
 
     for (let j = 0; j < entries.length; ++j) {
-        stub.onCall(j)
-            .callsFake(async function (chainId, condition, f) {
-                for (let i = entries[j].length - 1; i >= 0; --i) {
-                    const b = await condition(Entry.builder(entries[j][i]).blockContext(blockContexts[j][i]).build());
-                    if (b) {
-                        await f(Entry.builder(entries[j][i]).blockContext(blockContexts[j][i]).build());
-                    }
+        stub.onCall(j).callsFake(async function(chainId, condition, f) {
+            for (let i = entries[j].length - 1; i >= 0; --i) {
+                const b = await condition(
+                    Entry.builder(entries[j][i])
+                        .blockContext(blockContexts[j][i])
+                        .build()
+                );
+                if (b) {
+                    await f(
+                        Entry.builder(entries[j][i])
+                            .blockContext(blockContexts[j][i])
+                            .build()
+                    );
                 }
-            });
+            }
+        });
     }
 
     return cli;

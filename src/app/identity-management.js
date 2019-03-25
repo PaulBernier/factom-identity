@@ -1,5 +1,10 @@
 const { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('./identity-struct'),
-    { isValidIdentityKey, isValidSecretIdentityKey, getPublicIdentityKey, generateRandomIdentityKeyPair } = require('./key-helpers');
+    {
+        isValidIdentityKey,
+        isValidSecretIdentityKey,
+        getPublicIdentityKey,
+        generateRandomIdentityKeyPair
+    } = require('./key-helpers');
 const { getActiveKeysAtHeight } = require('./identity-information-retriever');
 
 async function createIdentity(cli, name, keys, ecAddress) {
@@ -40,21 +45,39 @@ async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
 
     const oldPublicIdKey = getPublicIdentityKey(keys.oldIdKey);
     const newPublicIdKey = getPublicIdentityKey(keys.newIdKey);
-    const signingIdKey = { public: getPublicIdentityKey(keys.signingSecretIdKey), secret: keys.signingSecretIdKey };
+    const signingIdKey = {
+        public: getPublicIdentityKey(keys.signingSecretIdKey),
+        secret: keys.signingSecretIdKey
+    };
 
     const activeKeys = await getActiveKeysAtHeight(cli, identityChainId);
 
     if (!activeKeys.includes(oldPublicIdKey)) {
-        throw new Error(`Old identity key ${oldPublicIdKey} is not part of the active keys: [${activeKeys}].`);
+        throw new Error(
+            `Old identity key ${oldPublicIdKey} is not part of the active keys: [${activeKeys}].`
+        );
     }
     if (!activeKeys.includes(signingIdKey.public)) {
-        throw new Error(`Signer identity key ${signingIdKey.public} is not part of the active keys: [${activeKeys}].`);
+        throw new Error(
+            `Signer identity key ${
+                signingIdKey.public
+            } is not part of the active keys: [${activeKeys}].`
+        );
     }
     if (activeKeys.indexOf(oldPublicIdKey) <= activeKeys.indexOf(signingIdKey.public)) {
-        throw new Error(`Priority of the signing key ${signingIdKey.public} is not sufficient to replace the key ${oldPublicIdKey}`);
+        throw new Error(
+            `Priority of the signing key ${
+                signingIdKey.public
+            } is not sufficient to replace the key ${oldPublicIdKey}`
+        );
     }
 
-    const entry = generateIdentityKeyReplacementEntry(identityChainId, oldPublicIdKey, newPublicIdKey, signingIdKey);
+    const entry = generateIdentityKeyReplacementEntry(
+        identityChainId,
+        oldPublicIdKey,
+        newPublicIdKey,
+        signingIdKey
+    );
 
     return cli.add(entry, ecAddress);
 }

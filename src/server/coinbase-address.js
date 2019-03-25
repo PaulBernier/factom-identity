@@ -1,11 +1,16 @@
-const { Entry, isValidPublicFctAddress, isValidEcAddress, addressToRcdHash, rcdHashToPublicFctAddress } = require('factom');
+const {
+    Entry,
+    isValidPublicFctAddress,
+    isValidEcAddress,
+    addressToRcdHash,
+    rcdHashToPublicFctAddress
+} = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
 const { getNowTimestamp8BytesBuffer } = require('./common');
 const { verify, extractSecretFromIdentityKey, sign } = require('./common');
-const { sha256d, secretToPublicKey, } = require('../crypto');
+const { sha256d, secretToPublicKey } = require('../crypto');
 const { isValidSk1, isValidServerIdentityChainId } = require('./validation');
 const { VERSION_0 } = require('./constant');
-
 
 ///////////////// Read /////////////////
 
@@ -23,7 +28,8 @@ function extract(rootChainId, rootEntries, identityKey1) {
 }
 
 function extractHistory(rootChainId, rootEntries, identityKey1) {
-    return rootEntries.reverse()
+    return rootEntries
+        .reverse()
         .filter(e => isValidCoinbaseAddressRegistration(e, rootChainId, identityKey1))
         .map(e => ({
             registrationEntryHash: e.hash().toString('hex'),
@@ -36,11 +42,13 @@ function extractHistory(rootChainId, rootEntries, identityKey1) {
 function isValidCoinbaseAddressRegistration(entry, rootChainId, identityKey1) {
     const extIds = entry.extIds;
 
-    if (extIds.length !== 7 ||
+    if (
+        extIds.length !== 7 ||
         !extIds[0].equals(VERSION_0) ||
         extIds[1].toString() !== 'Coinbase Address' ||
         extIds[2].toString('hex') !== rootChainId ||
-        !sha256d(extIds[5]).equals(identityKey1)) {
+        !sha256d(extIds[5]).equals(identityKey1)
+    ) {
         return false;
     }
 
@@ -54,7 +62,6 @@ function isValidCoinbaseAddressRegistration(entry, rootChainId, identityKey1) {
 }
 
 ///////////////// Update /////////////////
-
 
 async function update(cli, rootChainId, fctAddress, sk1, ecAddress) {
     if (!isValidSk1(sk1)) {
@@ -74,12 +81,21 @@ async function update(cli, rootChainId, fctAddress, sk1, ecAddress) {
 
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
-    const identityKey = sha256d(Buffer.concat([Buffer.from('01', 'hex'), secretToPublicKey(extractSecretFromIdentityKey(sk1))]));
+    const identityKey = sha256d(
+        Buffer.concat([
+            Buffer.from('01', 'hex'),
+            secretToPublicKey(extractSecretFromIdentityKey(sk1))
+        ])
+    );
     if (!rootChain.identityKeys[0].equals(identityKey)) {
-        throw new Error(`The SK1 key cannot sign entries in the Identity Root Chain ${rootChainId}`);
+        throw new Error(
+            `The SK1 key cannot sign entries in the Identity Root Chain ${rootChainId}`
+        );
     }
 
-    const entry = Entry.builder(getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1)).build();
+    const entry = Entry.builder(
+        getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1)
+    ).build();
     return await cli.add(entry, ecAddress);
 }
 
@@ -118,7 +134,15 @@ function getCoinbaseAddressUpdateEntry(rootChainId, fctAddress, sk1) {
 
     return {
         chainId: chainId,
-        extIds: [version, marker, chainId, factoidAddress, timestamp, identityKeyPreImage, signature],
+        extIds: [
+            version,
+            marker,
+            chainId,
+            factoidAddress,
+            timestamp,
+            identityKeyPreImage,
+            signature
+        ],
         content: Buffer.from('')
     };
 }

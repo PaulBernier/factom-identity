@@ -1,5 +1,9 @@
 const { WalletdCli } = require('factom');
-const { isValidIdentityKey, isValidSecretIdentityKey, getPublicIdentityKey } = require('./key-helpers');
+const {
+    isValidIdentityKey,
+    isValidSecretIdentityKey,
+    getPublicIdentityKey
+} = require('./key-helpers');
 
 /**
  * Helper class to user factom-walletd as a key store.
@@ -50,7 +54,7 @@ class FactomWalletdKeyStore {
             params = secretIdKeys.map(k => ({ secret: k }));
         } else {
             if (!isValidSecretIdentityKey(secretIdKeys)) {
-                throw new ('Argument is not a valid secret identity key.');
+                throw new 'Argument is not a valid secret identity key.'();
             }
             params = [{ secret: secretIdKeys }];
         }
@@ -61,7 +65,7 @@ class FactomWalletdKeyStore {
 
     /**
      * Remove from walletd some identity keys.
-     * @param {string|string[]} idKeys 
+     * @param {string|string[]} idKeys
      */
     async removeIdentityKeys(idKeys) {
         let publicIdKeys = [];
@@ -77,9 +81,13 @@ class FactomWalletdKeyStore {
             publicIdKeys = [getPublicIdentityKey(idKeys)];
         }
 
-        await Promise.all(publicIdKeys.map(key => this.cli.call('remove-identity-key', {
-            public: key
-        })));
+        await Promise.all(
+            publicIdKeys.map(key =>
+                this.cli.call('remove-identity-key', {
+                    public: key
+                })
+            )
+        );
     }
 
     /**
@@ -93,7 +101,7 @@ class FactomWalletdKeyStore {
     }
 
     /**
-     * Generates a new identity key from the wallet seed and stores it into walletd. 
+     * Generates a new identity key from the wallet seed and stores it into walletd.
      * New keys are generated from the same mnemonic seed used for FCT and EC addresses.
      * @async
      * @param {number} [number=1] - Number of identity keys to generate.

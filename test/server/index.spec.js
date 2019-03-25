@@ -1,9 +1,8 @@
 const assert = require('chai').assert;
 const server = require('../../src/server');
 
-describe('Factom identity server module exports', function () {
-
-    it('Should export server module', function () {
+describe('Factom identity server module exports', function() {
+    it('Should export server module', function() {
         assert.isFunction(server.FactomServerIdentityManager);
         assert.isFunction(server.isValidSk1);
         assert.isFunction(server.isValidSk2);
@@ -14,5 +13,4 @@ describe('Factom identity server module exports', function () {
         assert.isFunction(server.generateCoinbaseAddressUpdateEntry);
         assert.isFunction(server.generateCoinbaseCancelEntry);
     });
-
 });

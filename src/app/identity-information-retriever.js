@@ -7,19 +7,25 @@ const sign = require('tweetnacl/nacl-fast').sign;
 const { isValidPublicIdentityKey, extractCryptoMaterial } = require('./key-helpers');
 
 const INITIAL_KEYS_SCHEMA = Joi.object().keys({
-    version: Joi.number().valid(1).required(),
-    keys: Joi.array().min(1).unique().items(Joi.factom().identityKey('public')).required(),
+    version: Joi.number()
+        .valid(1)
+        .required(),
+    keys: Joi.array()
+        .min(1)
+        .unique()
+        .items(Joi.factom().identityKey('public'))
+        .required()
 });
 
 const CACHE_SCHEMA = Joi.object().keys({
     keys: Joi.object().required(),
-    names: Joi.object().required(),
+    names: Joi.object().required()
 });
 
 class IdentityInformationRetriever {
     constructor(cli, opts = {}) {
         this.cli = cli;
-        this.save = opts.save || (async () => { });
+        this.save = opts.save || (async () => {});
 
         if (opts.initialCacheData) {
             Joi.assert(opts.initialCacheData, CACHE_SCHEMA);
@@ -56,17 +62,26 @@ class IdentityInformationRetriever {
             saveCache = true;
 
             applyKeyRotations(identityChainId, activeKeys, activeKeys, entries, cachedData);
-
         } else {
             const latestDataCached = cachedData[cachedData.length - 1];
             // If the data is requested for an height lower than what was alreay parsed
             // it means we don't need to fetch anything more and just read the result from the cached data
             // Otherwise fetch the entries down to the latest height that was processed
             if (blockHeight > latestDataCached.height) {
-                const entries = await getEntries(this.cli, identityChainId, latestDataCached.height);
+                const entries = await getEntries(
+                    this.cli,
+                    identityChainId,
+                    latestDataCached.height
+                );
 
                 if (entries.length > 0) {
-                    applyKeyRotations(identityChainId, latestDataCached.activeKeys, latestDataCached.allKeys, entries, cachedData);
+                    applyKeyRotations(
+                        identityChainId,
+                        latestDataCached.activeKeys,
+                        latestDataCached.allKeys,
+                        entries,
+                        cachedData
+                    );
                     saveCache = true;
                 }
             }
@@ -165,7 +180,10 @@ function getUpdatedActiveKeys(chainId, activeKeys, allKeys, entry) {
     // 5. Signature must be correct
     const signedData = Buffer.from(chainId + oldKey + newKey);
     const signature = entry.extIds[3];
-    if (signature.length !== 64 || !sign.detached.verify(signedData, signature, extractCryptoMaterial(signingKey))) {
+    if (
+        signature.length !== 64 ||
+        !sign.detached.verify(signedData, signature, extractCryptoMaterial(signingKey))
+    ) {
         return activeKeys;
     }
 
@@ -193,13 +211,15 @@ function getInitialKeys(entry) {
 async function getEntries(cli, identityChainId, lowerBoundHeight = -1) {
     const entries = [];
 
-    await cli.rewindChainWhile(identityChainId,
-        (entry) => entry.blockContext.directoryBlockHeight > lowerBoundHeight,
-        function (entry) {
+    await cli.rewindChainWhile(
+        identityChainId,
+        entry => entry.blockContext.directoryBlockHeight > lowerBoundHeight,
+        function(entry) {
             if (basicValidation(entry)) {
                 entries.push(entry);
             }
-        });
+        }
+    );
 
     return entries.reverse();
 }

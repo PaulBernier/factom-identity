@@ -1,9 +1,8 @@
 const assert = require('chai').assert;
 const app = require('../../src/app');
 
-describe('Factom identity for applications module exports', function () {
-
-    it('Should export app module', function () {
+describe('Factom identity for applications module exports', function() {
+    it('Should export app module', function() {
         assert.isFunction(app.FactomWalletdKeyStore);
         assert.isFunction(app.FactomIdentityManager);
         assert.isFunction(app.isValidIdentityKey);
@@ -13,7 +12,6 @@ describe('Factom identity for applications module exports', function () {
         assert.isFunction(app.getPublicIdentityKey);
         assert.isFunction(app.keyToPublicIdentityKey);
         assert.isFunction(app.seedToSecretIdentityKey);
-        assert.isFunction(app.generateRandomIdentityKeyPair);        
+        assert.isFunction(app.generateRandomIdentityKeyPair);
     });
-
 });

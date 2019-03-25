@@ -9,7 +9,6 @@ const { VERSION_0 } = require('./constant');
 ///////////////// Read /////////////////
 
 function extract(rootChainId, managementEntries, identityKey1) {
-
     for (const entry of managementEntries.reverse()) {
         if (isValidEfficiencyRegistration(entry, rootChainId, identityKey1)) {
             return {
@@ -23,8 +22,8 @@ function extract(rootChainId, managementEntries, identityKey1) {
 }
 
 function extractHistory(rootChainId, managementEntries, identityKey1) {
-
-    return managementEntries.reverse()
+    return managementEntries
+        .reverse()
         .filter(e => isValidEfficiencyRegistration(e, rootChainId, identityKey1))
         .map(e => ({
             registrationEntryHash: e.hash().toString('hex'),
@@ -37,12 +36,14 @@ function extractHistory(rootChainId, managementEntries, identityKey1) {
 function isValidEfficiencyRegistration(entry, rootChainId, identityKey1) {
     const extIds = entry.extIds;
 
-    if (extIds.length !== 7 ||
+    if (
+        extIds.length !== 7 ||
         !extIds[0].equals(VERSION_0) ||
         extIds[1].toString() !== 'Server Efficiency' ||
         extIds[2].toString('hex') !== rootChainId ||
         extIds[3].length !== 2 ||
-        !sha256d(extIds[5]).equals(identityKey1)) {
+        !sha256d(extIds[5]).equals(identityKey1)
+    ) {
         return false;
     }
 
@@ -75,12 +76,19 @@ async function update(cli, rootChainId, efficiency, sk1, ecAddress) {
 
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
-    const identityKey = sha256d(Buffer.concat([Buffer.from('01', 'hex'), secretToPublicKey(extractSecretFromIdentityKey(sk1))]));
+    const identityKey = sha256d(
+        Buffer.concat([
+            Buffer.from('01', 'hex'),
+            secretToPublicKey(extractSecretFromIdentityKey(sk1))
+        ])
+    );
     if (!rootChain.identityKeys[0].equals(identityKey)) {
         throw new Error(`The SK1 cannot sign in the Identity Root Chain ${rootChainId}`);
     }
 
-    const entry = Entry.builder(getEfficiencyUpdateEntry(rootChainId, rootChain.serverManagementSubchainId, efficiency, sk1)).build();
+    const entry = Entry.builder(
+        getEfficiencyUpdateEntry(rootChainId, rootChain.serverManagementSubchainId, efficiency, sk1)
+    ).build();
     return await cli.add(entry, ecAddress);
 }
 
@@ -96,7 +104,9 @@ async function update(cli, rootChainId, efficiency, sk1, ecAddress) {
  */
 function generateUpdateEntry(rootChainId, serverManagementSubchainId, efficiency, sk1) {
     if (rootChainId === serverManagementSubchainId) {
-        throw new Error(`The root chain id cannot be the same as the server management subchain id (${rootChainId})`);
+        throw new Error(
+            `The root chain id cannot be the same as the server management subchain id (${rootChainId})`
+        );
     }
     if (!isValidServerIdentityChainId(rootChainId)) {
         throw new Error(`Invalid root chain id ${rootChainId}`);

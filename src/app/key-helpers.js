@@ -18,7 +18,7 @@ function isValidIdentityKey(idKey) {
         if (typeof idKey !== 'string') {
             return false;
         }
-        
+
         if (!VALID_ID_PREFIXES.has(idKey.slice(0, 5))) {
             return false;
         }
@@ -58,7 +58,6 @@ function isValidPublicIdentityKey(pubIdKey) {
 function isValidSecretIdentityKey(secIdKey) {
     return isValidIdentityKey(secIdKey) && secIdKey.startsWith('idsec');
 }
-
 
 /**
  * Extract the ed25519 cryptographic material encapsulated in the identity key.

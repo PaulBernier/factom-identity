@@ -6,13 +6,15 @@ async function getIdentityRootChain(cli, rootChainId) {
     if (!isValidServerIdentityChainId(rootChainId)) {
         throw new Error(`Invalid root chain id ${rootChainId}`);
     }
-    
+
     const entries = await cli.getAllEntriesOfChain(rootChainId);
 
     const extIds = entries[0].extIds;
-    if (!extIds[0].equals(VERSION_0) ||
+    if (
+        !extIds[0].equals(VERSION_0) ||
         extIds[1].toString() !== 'Identity Chain' ||
-        extIds.length !== 7) {
+        extIds.length !== 7
+    ) {
         throw new Error('Invalid Root Factom Identity Chain');
     }
 
@@ -26,14 +28,18 @@ async function getServerManagementSubchain(cli, serverManagementSubchainId, root
     const entries = await cli.getAllEntriesOfChain(serverManagementSubchainId);
 
     const extIds = entries[0].extIds;
-    if (!extIds[0].equals(VERSION_0) ||
+    if (
+        !extIds[0].equals(VERSION_0) ||
         extIds[1].toString() !== 'Server Management' ||
-        extIds.length !== 4) {
+        extIds.length !== 4
+    ) {
         throw new Error('Invalid Server Management Subchain');
     }
 
     if (rootChainId && rootChainId !== extIds[2].toString('hex')) {
-        throw new Error('This Server Management Subchain doesn\'t reference the Identity Root Chain Id provided');
+        throw new Error(
+            "This Server Management Subchain doesn't reference the Identity Root Chain Id provided"
+        );
     }
 
     return { entries };
@@ -47,8 +53,9 @@ function extractIdentityKeys(entry) {
 }
 
 function extractServerManagementSubchainId(entries, identityKeys) {
-
-    const serverManagementSubchainEntry = entries.find(e => e.extIds[1].toString() === 'Register Server Management');
+    const serverManagementSubchainEntry = entries.find(
+        e => e.extIds[1].toString() === 'Register Server Management'
+    );
 
     if (!serverManagementSubchainEntry) {
         throw new Error('No Server Managemenet Subchain registering entry found');
@@ -61,10 +68,12 @@ function extractServerManagementSubchainId(entries, identityKeys) {
 function verifyServerManagementSubchainRegistration(entry, identityKey1) {
     const extIds = entry.extIds;
 
-    if (!extIds[0].equals(VERSION_0) ||
+    if (
+        !extIds[0].equals(VERSION_0) ||
         extIds[1].toString() !== 'Register Server Management' ||
         extIds[2].length !== 32 ||
-        !sha256d(extIds[3]).equals(identityKey1)) {
+        !sha256d(extIds[3]).equals(identityKey1)
+    ) {
         throw new Error('Invalid Server Managemenet Subchain registration');
     }
 

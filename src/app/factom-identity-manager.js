@@ -37,7 +37,7 @@ class FactomIdentityManager {
      * If no block height is specified, check for the latest block height.
      * @async
      * @param {string} identityChainId - Identity chain id.
-     * @param {number} [blockHeight] - Specific blockchain height. If not provided check for the latest block. 
+     * @param {number} [blockHeight] - Specific blockchain height. If not provided check for the latest block.
      * @returns {string[]} - Array of public identity keys active for the identity.
      */
     async getActivePublicIdentityKeys(identityChainId, blockHeight) {
@@ -59,13 +59,16 @@ class FactomIdentityManager {
      * @async
      * @param {string} identityChainId - Identity chain id.
      * @param {string} idKey - Public or private identity key.
-     * @param {number} [blockHeight] - Specific blockchain height. If not provided check for the latest block. 
+     * @param {number} [blockHeight] - Specific blockchain height. If not provided check for the latest block.
      * @returns {boolean} - True if the identity key is active for the identity.
      */
     async isIdentityKeyActive(identityChainId, idKey, blockHeight) {
         const publicIdentityKey = getPublicIdentityKey(idKey);
 
-        const keys = await this.identityRetriever.getActiveKeysAtHeight(identityChainId, blockHeight);
+        const keys = await this.identityRetriever.getActiveKeysAtHeight(
+            identityChainId,
+            blockHeight
+        );
 
         return keys.includes(publicIdentityKey);
     }
@@ -74,11 +77,11 @@ class FactomIdentityManager {
      * Create a new identity on-chain.
      * @async
      * @param {string[]} name - Array of strings used as the "name" of the identity.
-     * @param {string[] | number} keys - Either an array of public identity keys or a number. 
+     * @param {string[] | number} keys - Either an array of public identity keys or a number.
      * If a number is provided the library generate new random keys (the secret keys are part of the returned object).
-     * @param {string} ecAddress - Entry Credit address paying for the entry. 
+     * @param {string} ecAddress - Entry Credit address paying for the entry.
      * If a public EC address is provided the library attempts to retrieve the secret part from the configured walletd instance.
-      * @returns {{ identityKeys: {public: string, secret:string}, txId: string, repeatedCommit: boolean, chainId: string, entryHash: string }[]} - 
+     * @returns {{ identityKeys: {public: string, secret:string}, txId: string, repeatedCommit: boolean, chainId: string, entryHash: string }[]} -
      * Info about the Chain creation together with the list of identity keys associated with the new identity.
      */
     async createIdentity(name, keys, ecAddress) {
@@ -93,7 +96,7 @@ class FactomIdentityManager {
      * @param {string} keys.oldIdKey - Old public identity key to replace.
      * @param {string} keys.newIdKey - New public identity key to take the place of oldIdKey.
      * @param {string} keys.signingSecretIdKey - Secret identity key signing for the replacement. Must be of same or higher priority than oldIdKey.
-     * @param {string} ecAddress - Entry Credit address paying for the entry. 
+     * @param {string} ecAddress - Entry Credit address paying for the entry.
      * If a public EC address is provided the library attempts to retrieve the secret part from the configured walletd instance.
      * @returns {{ txId: string, repeatedCommit: boolean, chainId: string, entryHash: string }} - Info about the Entry insertion.
      */

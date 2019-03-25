@@ -11,7 +11,7 @@ async function add(cli, rootChainId, height, index, sk1, ecAddress) {
     if (!isValidSk1(sk1)) {
         throw new Error('Lowest level identity key (sk1) is not valid');
     }
-    
+
     const balance = await cli.getBalance(ecAddress);
     if (balance < 1) {
         throw new Error('Insufficient EC balance to pay for adding coinbase cancel entry');
@@ -19,12 +19,25 @@ async function add(cli, rootChainId, height, index, sk1, ecAddress) {
 
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
-    const identityKey = sha256d(Buffer.concat([Buffer.from('01', 'hex'), secretToPublicKey(extractSecretFromIdentityKey(sk1))]));
+    const identityKey = sha256d(
+        Buffer.concat([
+            Buffer.from('01', 'hex'),
+            secretToPublicKey(extractSecretFromIdentityKey(sk1))
+        ])
+    );
     if (!rootChain.identityKeys[0].equals(identityKey)) {
         throw new Error(`The SK1 key cannot sign in the Identity Root Chain ${rootChainId}`);
     }
 
-    const entry = Entry.builder(generateCoinbaseCancelEntry(rootChainId, rootChain.serverManagementSubchainId.toString('hex'), height, index, sk1)).build();
+    const entry = Entry.builder(
+        generateCoinbaseCancelEntry(
+            rootChainId,
+            rootChain.serverManagementSubchainId.toString('hex'),
+            height,
+            index,
+            sk1
+        )
+    ).build();
 
     return await cli.add(entry, ecAddress);
 }
@@ -46,7 +59,9 @@ function generateCoinbaseCancelEntry(rootChainId, serverManagementSubchainId, he
         throw new Error(`Invalid server management subchain id ${serverManagementSubchainId}`);
     }
     if (rootChainId === serverManagementSubchainId) {
-        throw new Error(`The root chain id cannot be the same as the server management subchain id (${rootChainId})`);
+        throw new Error(
+            `The root chain id cannot be the same as the server management subchain id (${rootChainId})`
+        );
     }
     if (!isValidSk1(sk1)) {
         throw new Error('Lowest level identity key (sk1) is not valid');
@@ -57,7 +72,6 @@ function generateCoinbaseCancelEntry(rootChainId, serverManagementSubchainId, he
     if (typeof index !== 'number' || index < 0) {
         throw new Error('Descriptor index should be a positive number');
     }
-
 
     const version = Buffer.from('00', 'hex');
     const marker = Buffer.from('Coinbase Cancel', 'utf8');
@@ -72,7 +86,15 @@ function generateCoinbaseCancelEntry(rootChainId, serverManagementSubchainId, he
 
     return {
         chainId: Buffer.from(serverManagementSubchainId, 'hex'),
-        extIds: [version, marker, chainId, descriptorHeight, descriptorIndex, identityKeyPreImage, signature],
+        extIds: [
+            version,
+            marker,
+            chainId,
+            descriptorHeight,
+            descriptorIndex,
+            identityKeyPreImage,
+            signature
+        ],
         content: Buffer.from('')
     };
 }

@@ -2,14 +2,25 @@ const { getIdentityRootChain, getServerManagementSubchain } = require('./identit
 const cbAddress = require('./coinbase-address');
 const eff = require('./efficiency');
 
-
 async function getIdentity(cli, rootChainId) {
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
-    const managementSubchain = await getServerManagementSubchain(cli, rootChain.serverManagementSubchainId, rootChainId);
+    const managementSubchain = await getServerManagementSubchain(
+        cli,
+        rootChain.serverManagementSubchainId,
+        rootChainId
+    );
 
-    const coinbaseAddress = cbAddress.extract(rootChainId, rootChain.entries, rootChain.identityKeys[0]);
-    const efficiency = eff.extract(rootChainId, managementSubchain.entries, rootChain.identityKeys[0]);
+    const coinbaseAddress = cbAddress.extract(
+        rootChainId,
+        rootChain.entries,
+        rootChain.identityKeys[0]
+    );
+    const efficiency = eff.extract(
+        rootChainId,
+        managementSubchain.entries,
+        rootChain.identityKeys[0]
+    );
 
     return {
         rootChainId,
@@ -23,10 +34,22 @@ async function getIdentity(cli, rootChainId) {
 async function getIdentityHistory(cli, rootChainId) {
     const rootChain = await getIdentityRootChain(cli, rootChainId);
 
-    const managementSubchain = await getServerManagementSubchain(cli, rootChain.serverManagementSubchainId, rootChainId);
+    const managementSubchain = await getServerManagementSubchain(
+        cli,
+        rootChain.serverManagementSubchainId,
+        rootChainId
+    );
 
-    const coinbaseAddressHistory = cbAddress.extractHistory(rootChainId, rootChain.entries, rootChain.identityKeys[0]);
-    const efficiencyHistory = eff.extractHistory(rootChainId, managementSubchain.entries, rootChain.identityKeys[0]);
+    const coinbaseAddressHistory = cbAddress.extractHistory(
+        rootChainId,
+        rootChain.entries,
+        rootChain.identityKeys[0]
+    );
+    const efficiencyHistory = eff.extractHistory(
+        rootChainId,
+        managementSubchain.entries,
+        rootChain.identityKeys[0]
+    );
 
     return {
         rootChainId,
@@ -36,7 +59,6 @@ async function getIdentityHistory(cli, rootChainId) {
         identityKeys: rootChain.identityKeys.map(ik => ik.toString('hex'))
     };
 }
-
 
 module.exports = {
     getIdentity,

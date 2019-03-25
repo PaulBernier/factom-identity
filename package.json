@@ -6,8 +6,9 @@
     "scripts": {
         "docs": "documentation build --github --sort-order alpha src/** -f md > docs/doc.md",
         "docs-html": "documentation build src/** --sort-order alpha -f html -o docs",
-        "lint": "eslint src/",
-        "prepublishOnly": "npm run lint && npm run test && npm run docs",
+        "lint": "eslint \"{src,test}/**/*.js\"",
+        "format": "prettier --write \"{src,test}/**/*.js\"",
+        "prepublishOnly": "npm run format && npm run lint && npm run test && npm run docs",
         "test": "nyc --reporter=html --reporter=text mocha 'test/**/*.spec.js'"
     },
     "repository": {
@@ -39,8 +40,23 @@
         "documentation": "^9.3.1",
         "dotenv": "^7.0.0",
         "eslint": "^5.15.3",
+        "husky": "^1.3.1",
+        "lint-staged": "^8.1.5",
         "mocha": "^6.0.2",
         "nyc": "^13.3.0",
+        "prettier": "^1.16.4",
         "sinon": "^7.3.0"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.js": [
+            "eslint --fix",
+            "prettier --write",
+            "git add"
+        ]
     }
 }

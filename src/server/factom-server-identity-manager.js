@@ -83,7 +83,14 @@ class FactomServerIdentityManager {
      * @returns {{ txId: string, repeatedCommit: boolean, chainId: string, entryHash: string }} - Info about the Entry insertion.
      */
     async addCoinbaseCancel(rootChainId, descriptorHeight, descriptorIndex, sk1, ecAddress) {
-        return coinbaseCancel.add(this.cli, rootChainId, descriptorHeight, descriptorIndex, sk1, ecAddress);
+        return coinbaseCancel.add(
+            this.cli,
+            rootChainId,
+            descriptorHeight,
+            descriptorIndex,
+            sk1,
+            ecAddress
+        );
     }
 }
 
