@@ -38,7 +38,7 @@ async function getServerManagementSubchain(cli, serverManagementSubchainId, root
 
     if (rootChainId && rootChainId !== extIds[2].toString('hex')) {
         throw new Error(
-            "This Server Management Subchain doesn't reference the Identity Root Chain Id provided"
+            "This Server Management Subchain' doesnt reference the Identity Root Chain Id provided"
         );
     }
 

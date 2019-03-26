@@ -1,6 +1,6 @@
 {
     "name": "factom-identity-lib",
-    "version": "0.2.0-rc5",
+    "version": "0.2.0-rc6",
     "description": "Library to read and update Factom identities",
     "main": "src/index.js",
     "scripts": {
@@ -42,6 +42,7 @@
         "documentation": "^9.3.1",
         "dotenv": "^7.0.0",
         "eslint": "^5.15.3",
+        "eslint-config-prettier": "^4.1.0",
         "husky": "^1.3.1",
         "lint-staged": "^8.1.5",
         "mocha": "^6.0.2",

@@ -72,7 +72,7 @@ Module containing functions about Factom server identities.
 
 ### FactomServerIdentityManager
 
-[src/server/factom-server-identity-manager.js:27-88][63]
+[src/server/factom-server-identity-manager.js:27-95][63]
 
 Main class to read and write Factom identities.
 
@@ -101,7 +101,7 @@ const manager = new FactomServerIdentityManager({
 
 #### addCoinbaseCancel
 
-[src/server/factom-server-identity-manager.js:85-87][66]
+[src/server/factom-server-identity-manager.js:85-94][66]
 
 Add a coinbase cancel message to a server identity.
 
@@ -171,7 +171,7 @@ Returns **{txId: [string][67], repeatedCommit: [boolean][69], chainId: [string][
 
 ### generateCoinbaseAddressUpdateEntry
 
-[src/server/coinbase-address.js:95-107][75]
+[src/server/coinbase-address.js:111-123][75]
 
 Generate Entry object to update a server identity coinbase address.
 
@@ -183,7 +183,7 @@ Generate Entry object to update a server identity coinbase address.
 
 ### generateCoinbaseCancelEntry
 
-[src/server/coinbase-cancel.js:41-78][76]
+[src/server/coinbase-cancel.js:54-100][76]
 
 #### Parameters
 
@@ -195,7 +195,7 @@ Generate Entry object to update a server identity coinbase address.
 
 ### generateEfficiencyUpdateEntry
 
-[src/server/efficiency.js:97-115][77]
+[src/server/efficiency.js:105-125][77]
 
 Generate Entry object to update a server identity efficiency.
 
@@ -216,7 +216,7 @@ Module containing functions about Factom identities for applications.
 
 ### FactomIdentityManager
 
-[src/app/factom-identity-manager.js:29-103][80]
+[src/app/factom-identity-manager.js:29-106][80]
 
 Main class to read and write Factom identities.
 
@@ -248,16 +248,16 @@ const manager = new FactomIdentityManager({
 
 #### createIdentity
 
-[src/app/factom-identity-manager.js:84-86][82]
+[src/app/factom-identity-manager.js:87-89][82]
 
 Create a new identity on-chain.
 
 ##### Parameters
 
 -   `name` **[Array][71]&lt;[string][67]>** Array of strings used as the "name" of the identity.
--   `keys` **([Array][71]&lt;[string][67]> | [number][68])** Either an array of public identity keys or a number. 
+-   `keys` **([Array][71]&lt;[string][67]> | [number][68])** Either an array of public identity keys or a number.
     If a number is provided the library generate new random keys (the secret keys are part of the returned object).
--   `ecAddress` **[string][67]** Entry Credit address paying for the entry. 
+-   `ecAddress` **[string][67]** Entry Credit address paying for the entry.
     If a public EC address is provided the library attempts to retrieve the secret part from the configured walletd instance.
 
 Returns **[Array][71]&lt;{identityKeys: {public: [string][67], secret: [string][67]}, txId: [string][67], repeatedCommit: [boolean][69], chainId: [string][67], entryHash: [string][67]}>** Info about the Chain creation together with the list of identity keys associated with the new identity.
@@ -290,7 +290,7 @@ Returns **[Array][71]&lt;[Buffer][78]>** Array of Buffer representing the name o
 
 #### isIdentityKeyActive
 
-[src/app/factom-identity-manager.js:65-71][85]
+[src/app/factom-identity-manager.js:65-74][85]
 
 Check if an identity key is (was) active for an identity at a given blockchain height.
 If no block height is specified, check for the latest block height.
@@ -305,7 +305,7 @@ Returns **[boolean][69]** True if the identity key is active for the identity.
 
 #### replaceIdentityKey
 
-[src/app/factom-identity-manager.js:100-102][86]
+[src/app/factom-identity-manager.js:103-105][86]
 
 Replace an identity key by another on-chain.
 
@@ -316,14 +316,14 @@ Replace an identity key by another on-chain.
     -   `keys.oldIdKey` **[string][67]** Old public identity key to replace.
     -   `keys.newIdKey` **[string][67]** New public identity key to take the place of oldIdKey.
     -   `keys.signingSecretIdKey` **[string][67]** Secret identity key signing for the replacement. Must be of same or higher priority than oldIdKey.
--   `ecAddress` **[string][67]** Entry Credit address paying for the entry. 
+-   `ecAddress` **[string][67]** Entry Credit address paying for the entry.
     If a public EC address is provided the library attempts to retrieve the secret part from the configured walletd instance.
 
 Returns **{txId: [string][67], repeatedCommit: [boolean][69], chainId: [string][67], entryHash: [string][67]}** Info about the Entry insertion.
 
 ### extractCryptoMaterial
 
-[src/app/key-helpers.js:69-74][87]
+[src/app/key-helpers.js:68-73][87]
 
 Extract the ed25519 cryptographic material encapsulated in the identity key.
 
@@ -335,7 +335,7 @@ Returns **[Buffer][78]** Either the ed25519 32-byte public key or the 32-byte se
 
 ### FactomWalletdKeyStore
 
-[src/app/walletd-key-store.js:15-115][88]
+[src/app/walletd-key-store.js:19-123][88]
 
 Helper class to user factom-walletd as a key store.
 
@@ -355,9 +355,9 @@ const store = new FactomWalletdKeyStore({
 
 #### generateIdentityKey
 
-[src/app/walletd-key-store.js:102-114][89]
+[src/app/walletd-key-store.js:110-122][89]
 
-Generates a new identity key from the wallet seed and stores it into walletd. 
+Generates a new identity key from the wallet seed and stores it into walletd.
 New keys are generated from the same mnemonic seed used for FCT and EC addresses.
 
 ##### Parameters
@@ -368,7 +368,7 @@ Returns **{public: [string][67], secret: [string][67]}**
 
 #### getAllIdentityKeys
 
-[src/app/walletd-key-store.js:90-93][90]
+[src/app/walletd-key-store.js:98-101][90]
 
 Get all identity keys stored in walletd.
 
@@ -376,7 +376,7 @@ Returns **[Array][71]&lt;{public: [string][67], secret: [string][67]}>**
 
 #### getSecretIdentityKey
 
-[src/app/walletd-key-store.js:26-36][91]
+[src/app/walletd-key-store.js:30-40][91]
 
 Fetch corresponding identity key from the wallet if necessary.
 
@@ -388,7 +388,7 @@ Returns **[string][67]** Corresponsing secret identity key.
 
 #### importIdentityKeys
 
-[src/app/walletd-key-store.js:44-60][92]
+[src/app/walletd-key-store.js:48-64][92]
 
 Import keys in walletd.
 
@@ -400,7 +400,7 @@ Returns **[Array][71]&lt;{public: [string][67], secret: [string][67]}>**
 
 #### removeIdentityKeys
 
-[src/app/walletd-key-store.js:66-83][93]
+[src/app/walletd-key-store.js:70-91][93]
 
 Remove from walletd some identity keys.
 
@@ -410,7 +410,7 @@ Remove from walletd some identity keys.
 
 ### generateRandomIdentityKeyPair
 
-[src/app/key-helpers.js:130-137][94]
+[src/app/key-helpers.js:129-136][94]
 
 Generate a random identity key pair.
 
@@ -418,7 +418,7 @@ Returns **{public: [string][67], secret: [string][67]}** Random identity key pai
 
 ### getPublicIdentityKey
 
-[src/app/key-helpers.js:82-92][95]
+[src/app/key-helpers.js:81-91][95]
 
 Get the public identity key corresponding to the input identity key.
 
@@ -466,7 +466,7 @@ Returns **[boolean][69]** True if the secret identity key is valid.
 
 ### keyToPublicIdentityKey
 
-[src/app/key-helpers.js:100-102][99]
+[src/app/key-helpers.js:99-101][99]
 
 Convert a 32-byte key to a public identity key.
 
@@ -478,7 +478,7 @@ Returns **[string][67]** Public identity key.
 
 ### seedToSecretIdentityKey
 
-[src/app/key-helpers.js:110-112][100]
+[src/app/key-helpers.js:109-111][100]
 
 Convert a 32-byte seed to a secret identity key.
 
@@ -610,15 +610,15 @@ Returns **[string][67]** Secret identity key.
 
 [61]: #parameters-26
 
-[62]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/index.js#L6-L6 "Source code on GitHub"
+[62]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/index.js#L6-L6 "Source code on GitHub"
 
-[63]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/factom-server-identity-manager.js#L27-L88 "Source code on GitHub"
+[63]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/factom-server-identity-manager.js#L27-L95 "Source code on GitHub"
 
 [64]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
 [65]: https://factomjs.luciap.ca/#connectionoptions
 
-[66]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/factom-server-identity-manager.js#L85-L87 "Source code on GitHub"
+[66]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/factom-server-identity-manager.js#L85-L94 "Source code on GitHub"
 
 [67]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
@@ -626,64 +626,64 @@ Returns **[string][67]** Secret identity key.
 
 [69]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[70]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/factom-server-identity-manager.js#L38-L40 "Source code on GitHub"
+[70]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/factom-server-identity-manager.js#L38-L40 "Source code on GitHub"
 
 [71]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[72]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/factom-server-identity-manager.js#L48-L50 "Source code on GitHub"
+[72]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/factom-server-identity-manager.js#L48-L50 "Source code on GitHub"
 
-[73]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/factom-server-identity-manager.js#L60-L62 "Source code on GitHub"
+[73]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/factom-server-identity-manager.js#L60-L62 "Source code on GitHub"
 
-[74]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/factom-server-identity-manager.js#L72-L74 "Source code on GitHub"
+[74]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/factom-server-identity-manager.js#L72-L74 "Source code on GitHub"
 
-[75]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/coinbase-address.js#L95-L107 "Source code on GitHub"
+[75]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/coinbase-address.js#L111-L123 "Source code on GitHub"
 
-[76]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/coinbase-cancel.js#L41-L78 "Source code on GitHub"
+[76]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/coinbase-cancel.js#L54-L100 "Source code on GitHub"
 
-[77]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/server/efficiency.js#L97-L115 "Source code on GitHub"
+[77]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/server/efficiency.js#L105-L125 "Source code on GitHub"
 
 [78]: https://nodejs.org/api/buffer.html
 
-[79]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/index.js#L5-L5 "Source code on GitHub"
+[79]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/index.js#L5-L5 "Source code on GitHub"
 
-[80]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/factom-identity-manager.js#L29-L103 "Source code on GitHub"
+[80]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/factom-identity-manager.js#L29-L106 "Source code on GitHub"
 
 [81]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[82]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/factom-identity-manager.js#L84-L86 "Source code on GitHub"
+[82]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/factom-identity-manager.js#L87-L89 "Source code on GitHub"
 
-[83]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/factom-identity-manager.js#L43-L45 "Source code on GitHub"
+[83]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/factom-identity-manager.js#L43-L45 "Source code on GitHub"
 
-[84]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/factom-identity-manager.js#L52-L54 "Source code on GitHub"
+[84]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/factom-identity-manager.js#L52-L54 "Source code on GitHub"
 
-[85]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/factom-identity-manager.js#L65-L71 "Source code on GitHub"
+[85]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/factom-identity-manager.js#L65-L74 "Source code on GitHub"
 
-[86]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/factom-identity-manager.js#L100-L102 "Source code on GitHub"
+[86]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/factom-identity-manager.js#L103-L105 "Source code on GitHub"
 
-[87]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/key-helpers.js#L69-L74 "Source code on GitHub"
+[87]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/key-helpers.js#L68-L73 "Source code on GitHub"
 
-[88]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/walletd-key-store.js#L15-L115 "Source code on GitHub"
+[88]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/walletd-key-store.js#L19-L123 "Source code on GitHub"
 
-[89]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/walletd-key-store.js#L102-L114 "Source code on GitHub"
+[89]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/walletd-key-store.js#L110-L122 "Source code on GitHub"
 
-[90]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/walletd-key-store.js#L90-L93 "Source code on GitHub"
+[90]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/walletd-key-store.js#L98-L101 "Source code on GitHub"
 
-[91]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/walletd-key-store.js#L26-L36 "Source code on GitHub"
+[91]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/walletd-key-store.js#L30-L40 "Source code on GitHub"
 
-[92]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/walletd-key-store.js#L44-L60 "Source code on GitHub"
+[92]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/walletd-key-store.js#L48-L64 "Source code on GitHub"
 
-[93]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/walletd-key-store.js#L66-L83 "Source code on GitHub"
+[93]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/walletd-key-store.js#L70-L91 "Source code on GitHub"
 
-[94]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/key-helpers.js#L130-L137 "Source code on GitHub"
+[94]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/key-helpers.js#L129-L136 "Source code on GitHub"
 
-[95]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/key-helpers.js#L82-L92 "Source code on GitHub"
+[95]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/key-helpers.js#L81-L91 "Source code on GitHub"
 
-[96]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/key-helpers.js#L16-L40 "Source code on GitHub"
+[96]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/key-helpers.js#L16-L40 "Source code on GitHub"
 
-[97]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/key-helpers.js#L48-L50 "Source code on GitHub"
+[97]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/key-helpers.js#L48-L50 "Source code on GitHub"
 
-[98]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/key-helpers.js#L58-L60 "Source code on GitHub"
+[98]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/key-helpers.js#L58-L60 "Source code on GitHub"
 
-[99]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/key-helpers.js#L100-L102 "Source code on GitHub"
+[99]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/key-helpers.js#L99-L101 "Source code on GitHub"
 
-[100]: https://git@github.com/:PaulBernier/factom-identity/blob/ac99fb0ebd8ecdd0034bb2bca396e7637ae20b05/src/app/key-helpers.js#L110-L112 "Source code on GitHub"
+[100]: https://git@github.com/:PaulBernier/factom-identity/blob/685a6b0726a8d4d39c96755d4bcf892cf0b69bb7/src/app/key-helpers.js#L109-L111 "Source code on GitHub"
