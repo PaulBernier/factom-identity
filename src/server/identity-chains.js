@@ -1,4 +1,5 @@
-const { sha256d, verify } = require('../crypto');
+const { sha256d } = require('../crypto');
+const { verify } = require('./common');
 const { isValidServerIdentityChainId } = require('./validation');
 const { VERSION_0 } = require('./constant');
 

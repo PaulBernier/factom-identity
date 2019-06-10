@@ -6,8 +6,12 @@ const {
     rcdHashToPublicFctAddress
 } = require('factom');
 const { getIdentityRootChain } = require('./identity-chains');
-const { getNowTimestamp8BytesBuffer } = require('./common');
-const { verify, extractSecretFromIdentityKey, sign } = require('./common');
+const {
+    getNowTimestamp8BytesBuffer,
+    verify,
+    extractSecretFromIdentityKey,
+    sign
+} = require('./common');
 const { sha256d, secretToPublicKey } = require('../crypto');
 const { isValidSk1, isValidServerIdentityChainId } = require('./validation');
 const { VERSION_0 } = require('./constant');
