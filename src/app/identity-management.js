@@ -64,7 +64,7 @@ async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
             } is not part of the active keys: [${activeKeys}].`
         );
     }
-    if (activeKeys.indexOf(oldPublicIdKey) <= activeKeys.indexOf(signingIdKey.public)) {
+    if (activeKeys.indexOf(oldPublicIdKey) < activeKeys.indexOf(signingIdKey.public)) {
         throw new Error(
             `Priority of the signing key ${
                 signingIdKey.public
