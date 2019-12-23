@@ -23,6 +23,24 @@ describe('Compute active keys at block height', function() {
         assert.deepStrictEqual(activeKeys, initialPublicKeys);
     });
 
+    it('Should reject invalid initial set of keys', async function() {
+        const chainId = randomBytes(32).toString('hex');
+        const initialPublicKeys = getRandomKeys().map(k => k.public);
+        initialPublicKeys.push('NOT A VALID PUBLIC KEY');
+        const entries = [[getIdentityFirstEntry(initialPublicKeys)]];
+        const blockContexts = getBlockContexts([[1]]);
+        const cli = getMockedCli(chainId, entries, blockContexts);
+
+        const retriever = new IdentityInformationRetriever(cli);
+        try {
+            await retriever.getActiveKeysAtHeight(chainId, 99999);
+        } catch (e) {
+            assert.instanceOf(e, Error);
+            return;
+        }
+        assert.fail('Should have thrown');
+    });
+
     it('Should handle 2 key rotations in the same block', async function() {
         const chainId = randomBytes(32).toString('hex');
         const initialKeys = getRandomKeys();
@@ -400,7 +418,10 @@ describe('Compute active keys at block height', function() {
             [getIdentityFirstEntry(initialPublicKeys), replacement],
             [replacement, replacement2]
         ];
-        const blockContexts = getBlockContexts([[1, 5], [5, 10]]);
+        const blockContexts = getBlockContexts([
+            [1, 5],
+            [5, 10]
+        ]);
         const cli = getMockedCli(chainId, entries, blockContexts);
 
         const retriever = new IdentityInformationRetriever(cli);
@@ -417,8 +438,10 @@ describe('Compute active keys at block height', function() {
     it('Should get identity name', async function() {
         const chainId = randomBytes(32).toString('hex');
         const name = [randomBytes(4), randomBytes(12), randomBytes(20)];
-        const firstEntry = generateIdentityChain(name, getRandomKeys().map(k => k.public))
-            .firstEntry;
+        const firstEntry = generateIdentityChain(
+            name,
+            getRandomKeys().map(k => k.public)
+        ).firstEntry;
 
         const cli = new FactomCli();
         const mock = sinon.mock(cli);

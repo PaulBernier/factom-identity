@@ -2,9 +2,33 @@
 // https://github.com/FactomProject/FactomDocs/blob/FD-849_PublishNewIdentitySpec/ApplicationIdentity.md
 // https://github.com/FactomProject/factom/blob/FD-732_release_2.2.15/identity.go#L72
 
-const Joi = require('joi').extend(require('joi-factom'));
+const Joi = require('@hapi/joi');
 const sign = require('tweetnacl/nacl-fast').sign;
 const { isValidPublicIdentityKey, extractCryptoMaterial } = require('./key-helpers');
+
+const identityJoi = Joi.extend(joi => {
+    return {
+        type: 'identity',
+        base: joi.string(),
+        messages: {
+            'identity.public': '"{{#label}}" is not a valid public identity key'
+        },
+        rules: {
+            public: {
+                method() {
+                    return this.$_addRule({ name: 'public' });
+                },
+                validate(value, helpers, args, options) {
+                    if (isValidPublicIdentityKey(value)) {
+                        return value;
+                    }
+
+                    return helpers.error('identity.public');
+                }
+            }
+        }
+    };
+});
 
 const INITIAL_KEYS_SCHEMA = Joi.object().keys({
     version: Joi.number()
@@ -13,7 +37,7 @@ const INITIAL_KEYS_SCHEMA = Joi.object().keys({
     keys: Joi.array()
         .min(1)
         .unique()
-        .items(Joi.factom().identityKey('public'))
+        .items(identityJoi.identity().public())
         .required()
 });
 
