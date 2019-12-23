@@ -101,7 +101,13 @@ class FactomIdentityManager {
      * @returns {{ txId: string, repeatedCommit: boolean, chainId: string, entryHash: string }} - Info about the Entry insertion.
      */
     async replaceIdentityKey(identityChainId, keys, ecAddress) {
-        return replaceIdentityKey(this.cli, identityChainId, keys, ecAddress);
+        return replaceIdentityKey(
+            this.cli,
+            this.identityRetriever,
+            identityChainId,
+            keys,
+            ecAddress
+        );
     }
 }
 
