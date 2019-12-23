@@ -29,26 +29,26 @@
     "homepage": "https://github.com/PaulBernier/factom-identity#readme",
     "dependencies": {
         "base-58": "0.0.1",
-        "factom": "1.2.5",
+        "factom": "1.2.8",
         "hash.js": "^1.1.7",
         "joi": "^14.3.1",
         "joi-factom": "^1.1.2",
         "tweetnacl": "^1.0.1"
     },
     "devDependencies": {
-        "@commitlint/cli": "^8.0.0",
-        "@commitlint/config-conventional": "^8.0.0",
+        "@commitlint/cli": "^8.2.0",
+        "@commitlint/config-conventional": "^8.2.0",
         "chai": "^4.2.0",
-        "documentation": "^12.0.1",
-        "dotenv": "^8.0.0",
-        "eslint": "^6.0.1",
-        "eslint-config-prettier": "^6.0.0",
-        "husky": "^3.0.0",
-        "lint-staged": "^9.2.0",
-        "mocha": "^6.1.4",
-        "nyc": "^14.1.1",
-        "prettier": "^1.18.2",
-        "sinon": "^7.3.2"
+        "documentation": "^12.1.4",
+        "dotenv": "^8.2.0",
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^6.7.0",
+        "husky": "^3.1.0",
+        "lint-staged": "^9.5.0",
+        "mocha": "^6.2.2",
+        "nyc": "^15.0.0",
+        "prettier": "^1.19.1",
+        "sinon": "^8.0.1"
     },
     "husky": {
         "hooks": {
