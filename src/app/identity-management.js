@@ -5,7 +5,6 @@ const { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('
         getPublicIdentityKey,
         generateRandomIdentityKeyPair
     } = require('./key-helpers');
-const { getActiveKeysAtHeight } = require('./identity-information-retriever');
 
 async function createIdentity(cli, name, keys, ecAddress) {
     const identityKeys = getIdentityKeys(keys);
@@ -38,7 +37,7 @@ function getIdentityKeys(identityKeys) {
     return result;
 }
 
-async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
+async function replaceIdentityKey(cli, identityRetriever, identityChainId, keys, ecAddress) {
     if (!isValidSecretIdentityKey(keys.signingSecretIdKey)) {
         throw new Error('signingSecretIdKey must be a valid secret identity key');
     }
@@ -50,7 +49,7 @@ async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
         secret: keys.signingSecretIdKey
     };
 
-    const activeKeys = await getActiveKeysAtHeight(cli, identityChainId);
+    const activeKeys = await identityRetriever.getActiveKeysAtHeight(identityChainId);
 
     if (!activeKeys.includes(oldPublicIdKey)) {
         throw new Error(
@@ -59,12 +58,16 @@ async function replaceIdentityKey(cli, identityChainId, keys, ecAddress) {
     }
     if (!activeKeys.includes(signingIdKey.public)) {
         throw new Error(
-            `Signer identity key ${signingIdKey.public} is not part of the active keys: [${activeKeys}].`
+            `Signer identity key ${
+                signingIdKey.public
+            } is not part of the active keys: [${activeKeys}].`
         );
     }
     if (activeKeys.indexOf(oldPublicIdKey) < activeKeys.indexOf(signingIdKey.public)) {
         throw new Error(
-            `Priority of the signing key ${signingIdKey.public} is not sufficient to replace the key ${oldPublicIdKey}`
+            `Priority of the signing key ${
+                signingIdKey.public
+            } is not sufficient to replace the key ${oldPublicIdKey}`
         );
     }
 
