@@ -5,7 +5,6 @@ const { generateIdentityChain, generateIdentityKeyReplacementEntry } = require('
         getPublicIdentityKey,
         generateRandomIdentityKeyPair
     } = require('./key-helpers');
-const { getActiveKeysAtHeight } = require('./identity-information-retriever');
 
 async function createIdentity(cli, name, keys, ecAddress) {
     const identityKeys = getIdentityKeys(keys);
@@ -50,7 +49,7 @@ async function replaceIdentityKey(cli, identityRetriever, identityChainId, keys,
         secret: keys.signingSecretIdKey
     };
 
-    const activeKeys = await identityRetriever.getActiveKeysAtHeight(cli, identityChainId);
+    const activeKeys = await identityRetriever.getActiveKeysAtHeight(identityChainId);
 
     if (!activeKeys.includes(oldPublicIdKey)) {
         throw new Error(
