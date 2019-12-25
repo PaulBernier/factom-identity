@@ -58,16 +58,12 @@ async function replaceIdentityKey(cli, identityRetriever, identityChainId, keys,
     }
     if (!activeKeys.includes(signingIdKey.public)) {
         throw new Error(
-            `Signer identity key ${
-                signingIdKey.public
-            } is not part of the active keys: [${activeKeys}].`
+            `Signer identity key ${signingIdKey.public} is not part of the active keys: [${activeKeys}].`
         );
     }
     if (activeKeys.indexOf(oldPublicIdKey) < activeKeys.indexOf(signingIdKey.public)) {
         throw new Error(
-            `Priority of the signing key ${
-                signingIdKey.public
-            } is not sufficient to replace the key ${oldPublicIdKey}`
+            `Priority of the signing key ${signingIdKey.public} is not sufficient to replace the key ${oldPublicIdKey}`
         );
     }
 
